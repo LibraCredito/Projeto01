@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
 import { Wrap } from '@/components/ui/Wrap'
-import { BRAZIL_STATES, HERO_IMAGE, HERO_VIDEO } from '@/content/home'
+import { HERO_IMAGE, HERO_VIDEO } from '@/content/home'
 import { HOME_DEFAULTS } from '@/features/admin/defaults/siteContent'
 import { useAdmin } from '@/features/admin/AdminProvider'
 import { resolveMediaUrl, uploadImage } from '@/features/admin/api/client'
@@ -624,13 +624,6 @@ export function HomePage() {
               <div className="br-legend">
                 <i /> <H k="brLegend" />
               </div>
-            </div>
-          </div>
-          <div className="br-marquee">
-            <div className="br-track">
-              {[...BRAZIL_STATES, ...BRAZIL_STATES].map((s, i) => (
-                <span key={`${s}-${i}`}>{s}</span>
-              ))}
             </div>
           </div>
         </Wrap>

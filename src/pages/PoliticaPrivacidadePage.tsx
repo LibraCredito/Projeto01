@@ -23,7 +23,7 @@ export function PoliticaPrivacidadePage() {
         <Wrap>
           <div className="artwrap">
             <Link className="artback" to={ROUTES.HOME}>
-              ← Voltar pro início
+              ← Voltar para o início
             </Link>
             <div className="artbody">
               {html ? (
@@ -47,7 +47,7 @@ export function PoliticaPrivacidadePage() {
                 <div className="doc-pending">
                   <b>Documento em migração</b>
                   <p>
-                    Estamos trazendo o texto oficial da nossa Política de Privacidade pra cá, na
+                    Estamos trazendo o texto oficial da nossa Política de Privacidade para cá, na
                     íntegra. Enquanto isso, você pode ler a versão vigente no nosso site:
                   </p>
                   <Button

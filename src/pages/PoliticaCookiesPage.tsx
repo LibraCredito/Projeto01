@@ -17,13 +17,13 @@ export function PoliticaCookiesPage() {
   return (
     <main>
       <PageHero eyebrow="Institucional" title="Política de Cookies" wide>
-        O que usamos pra melhorar a sua experiência — e como você controla isso.
+        O que usamos para melhorar a sua experiência — e como você controla isso.
       </PageHero>
       <Section variant="cream">
         <Wrap>
           <div className="artwrap">
             <Link className="artback" to={ROUTES.HOME}>
-              ← Voltar pro início
+              ← Voltar para o início
             </Link>
             <div className="artbody">
               {html ? (
@@ -47,7 +47,7 @@ export function PoliticaCookiesPage() {
                 <div className="doc-pending">
                   <b>Documento em migração</b>
                   <p>
-                    Estamos trazendo o texto oficial da nossa Política de Cookies pra cá, na íntegra.
+                    Estamos trazendo o texto oficial da nossa Política de Cookies para cá, na íntegra.
                     Enquanto isso, você pode ler a versão vigente no nosso site:
                   </p>
                   <Button

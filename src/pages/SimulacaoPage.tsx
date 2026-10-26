@@ -91,7 +91,7 @@ function BikeBadge() {
 }
 
 const URGENCY_OPTS: { id: NonNullable<Urgency>; label: string; hint: string }[] = [
-  { id: 'imediata', label: 'Pra ontem', hint: 'É urgente, quanto antes melhor' },
+  { id: 'imediata', label: 'Para ontem', hint: 'É urgente, quanto antes melhor' },
   { id: 'semanas', label: 'Nas próximas semanas', hint: 'Tenho um plano em andamento' },
   { id: 'meses', label: 'Nos próximos meses', hint: 'Estou me organizando com calma' },
   { id: 'pesquisando', label: 'Ainda estou só pesquisando', hint: 'Quero entender se faz sentido' },
@@ -240,7 +240,7 @@ export function SimulacaoPage() {
           Simule um <span className="em">crédito</span> com seu imóvel em garantia.
         </>
       ),
-      lead: 'Sua casa abre portas pra um crédito de verdade justo. Leva 2 minutos, é grátis e não afeta o seu score.',
+      lead: 'Sua casa abre portas para um crédito de verdade justo. Leva 2 minutos, é grátis e não afeta o seu score.',
     },
     {
       title: (
@@ -248,7 +248,7 @@ export function SimulacaoPage() {
           Agora, sobre o seu <span className="em">imóvel</span>.
         </>
       ),
-      lead: 'É ele que garante as menores taxas do mercado. Digite o CEP que a gente encontra o endereço pra você.',
+      lead: 'É ele que garante as menores taxas do mercado. Digite o CEP que a gente encontra o endereço para você.',
     },
     {
       title: (
@@ -264,7 +264,7 @@ export function SimulacaoPage() {
           Última etapa, <span className="em">prometemos</span>.
         </>
       ),
-      lead: 'Seus dados pra enviarmos a proposta — e você escolhe se quer atendimento automático ou humano.',
+      lead: 'Seus dados para enviarmos a proposta — e você escolhe se quer atendimento automático ou humano.',
     },
   ][step - 1]
 
@@ -292,7 +292,7 @@ export function SimulacaoPage() {
             <div className="wright">
               {step === 1 ? (
                 <div className="wpane on">
-                  <div className="wq">Pra quando você precisa do dinheiro?</div>
+                  <div className="wq">Para quando você precisa do dinheiro?</div>
                   <div className="wqd">Isso ajuda a gente a te atender no ritmo certo.</div>
                   <div className="opts">
                     {URGENCY_OPTS.map((o) => (
@@ -409,7 +409,7 @@ export function SimulacaoPage() {
 
                   <div className={cn('simneg', saldoBloqueia && 'show')}>
                     <b>Poxa, por enquanto não conseguimos seguir.</b>
-                    Pelo valor informado, o saldo do financiamento fica grande demais pra essa
+                    Pelo valor informado, o saldo do financiamento fica grande demais para essa
                     operação: a quitação pode representar no máximo 60% do crédito, e o crédito vai
                     até 50% do valor do imóvel. Quando o saldo devedor diminuir, vai ser um prazer
                     refazer a simulação com você.
@@ -534,7 +534,7 @@ export function SimulacaoPage() {
                         </div>
                       ) : null}
                       <div className="simr-row">
-                        <span>Líquido pra você</span>
+                        <span>Líquido para você</span>
                         <b>{liquido > 0 ? formatMoney(Math.min(creditoFinal, liquido)) : '—'}</b>
                       </div>
                       <div className="simr-row">
@@ -563,7 +563,7 @@ export function SimulacaoPage() {
 
               {step === 4 ? (
                 <form className="wpane on" onSubmit={submitLead}>
-                  <div className="wq">Pra quem enviamos a proposta?</div>
+                  <div className="wq">Para quem enviamos a proposta?</div>
                   <div className="wqd">Só a sua proposta e o contato do jeito que você preferir.</div>
                   <div className="fgrid">
                     <div className={cn('fcard', 'full', formWarn && !nome.trim() && 'err')}>
@@ -596,7 +596,7 @@ export function SimulacaoPage() {
                     </div>
                     {formWarn ? (
                       <div className="full whint warn" style={{ margin: '-4px 0 0' }}>
-                        Confere os campos destacados? Assim a proposta chega certinha pra você. 🙂
+                        Confere os campos destacados? Assim a proposta chega certinha para você. 🙂
                       </div>
                     ) : null}
                   </div>
@@ -604,7 +604,7 @@ export function SimulacaoPage() {
                     className="simr-list"
                     style={{ border: 'none', paddingTop: 8, marginTop: 14 }}
                   >
-                    <li style={{ color: 'var(--ink)' }}>Sem custo pra simular</li>
+                    <li style={{ color: 'var(--ink)' }}>Sem custo para simular</li>
                     <li style={{ color: 'var(--ink)' }}>Não afeta o seu score</li>
                     <li style={{ color: 'var(--ink)' }}>
                       Atendimento do seu jeito, humano ou automático
@@ -656,7 +656,7 @@ export function SimulacaoPage() {
               Simulação enviada!
             </h3>
             <p>
-              Recebemos a sua simulação. Nossa equipe vai te chamar em breve pra apresentar a
+              Recebemos a sua simulação. Nossa equipe vai te chamar em breve para apresentar a
               proposta do seu jeito. 💙
             </p>
             <Button variant="blue" arrow onClick={() => setModalOpen(false)}>

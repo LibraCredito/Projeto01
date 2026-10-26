@@ -30,9 +30,9 @@ export const HOME_DEFAULTS: Record<string, string> = {
   videoTitleBefore: 'A Libra,',
   videoTitleEm: 'em movimento',
 
-  usecaseEyebrow: 'Pra que serve',
+  usecaseEyebrow: 'Para que serve',
   usecaseTitle1: 'Respiro',
-  usecaseTitle2: 'pra colocar',
+  usecaseTitle2: 'para colocar',
   usecaseTitle3: 'a vida no lugar.',
   usecaseLead:
     'Home Equity é o crédito mais barato que existe e o que você faz com ele é só seu.',
@@ -46,7 +46,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
     'Capital de giro, expansão, equipamento novo. O empurrão que a sua empresa precisava.',
   use4Title: 'Realizar um plano',
   use4Text:
-    'Estudo, saúde, uma virada de vida. Fôlego pra investir no que importa de verdade.',
+    'Estudo, saúde, uma virada de vida. Fôlego para investir no que importa de verdade.',
 
   howEyebrow: 'Como funciona',
   howTitle: 'Simples do começo ao fim.',
@@ -69,11 +69,11 @@ export const HOME_DEFAULTS: Record<string, string> = {
   whyGoodValue: '1,19%',
   whyGoodUnit: 'ao mês + IPCA, com o imóvel como garantia',
   whyMeta1Value: '180',
-  whyMeta1Label: 'meses pra pagar',
+  whyMeta1Label: 'meses para pagar',
   whyMeta2Value: '50%',
   whyMeta2Label: 'do valor do imóvel',
   whyNote:
-    'Colocar o imóvel como garantia é o que permite juros lá embaixo. Menos peso todo mês, mais tempo pra respirar.',
+    'Colocar o imóvel como garantia é o que permite juros lá embaixo. Menos peso todo mês, mais tempo para respirar.',
 
   manifestoEyebrow: 'O nosso jeito',
   manifestoTitle: 'Crédito não precisa ser um peso. Precisa ser justo.',
@@ -90,7 +90,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   depoChip1: '2 min de história',
   depoChip2: 'Com legendas',
 
-  brEyebrow: 'De Ribeirão Preto pro país inteiro',
+  brEyebrow: 'De Ribeirão Preto para o país inteiro',
   brTitleBefore: 'A gente atende',
   brTitleEm: 'todo o Brasil',
   brLead:
@@ -114,7 +114,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   aboutStat2Value: '1,19%',
   aboutStat2Label: 'ao mês + IPCA',
   aboutStat3Value: '180',
-  aboutStat3Label: 'meses de prazo pra pagar',
+  aboutStat3Label: 'meses de prazo para pagar',
   aboutStat4Value: '100%',
   aboutStat4Label: 'online, com gente de verdade junto',
 
@@ -125,7 +125,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   finalCta: 'Simular meu crédito',
 
   footTag:
-    'Crédito com garantia de imóvel, feito com equilíbrio. Menos peso, mais fôlego pra viver.',
+    'Crédito com garantia de imóvel, feito com equilíbrio. Menos peso, mais fôlego para viver.',
   footColProduto: 'Produto',
   footColEmpresa: 'Empresa',
   footColContato: 'Contato',
@@ -167,18 +167,18 @@ export const COMO_DEFAULTS: Record<string, string> = {
     'Você informa o valor que precisa e alguns dados do imóvel. Em minutos, mostramos uma proposta com a parcela que cabe no seu bolso, de graça e sem compromisso.',
   step2Title: 'Atendimento do seu jeito',
   step2Text:
-    'Você decide como quer ser atendido: de forma automática e ágil, ou com um especialista de verdade que entende o seu momento e monta a melhor condição. Dá pra alternar entre os dois a qualquer hora.',
+    'Você decide como quer ser atendido: de forma automática e ágil, ou com um especialista de verdade que entende o seu momento e monta a melhor condição. Dá para alternar entre os dois a qualquer hora.',
   step3Title: 'Análise e avaliação do imóvel',
   step3Text:
-    'Conferimos a documentação e avaliamos o imóvel com cuidado. É a etapa que garante segurança pra você e as menores taxas do mercado.',
+    'Conferimos a documentação e avaliamos o imóvel com cuidado. É a etapa que garante segurança para você e as menores taxas do mercado.',
   step4Title: 'Assinatura e dinheiro na conta',
   step4Text:
     'Deu tudo certo, você assina o contrato digital e o crédito cai na conta. Aí é só respirar aliviado e colocar o plano em prática.',
   docsEyebrow: 'Documentos',
-  docsTitle: 'O que ter em mãos pra começar.',
+  docsTitle: 'O que ter em mãos para começar.',
   docsLead: 'Nada de burocracia infinita. O básico é:',
   doc1Title: 'Seus documentos',
-  doc1Text: 'RG ou CNH, CPF e comprovante de renda. Simples assim pra começar.',
+  doc1Text: 'RG ou CNH, CPF e comprovante de renda. Simples assim para começar.',
   doc2Title: 'Do imóvel',
   doc2Text: 'Matrícula atualizada e IPTU. O imóvel precisa estar quitado ou quase.',
   doc3Title: 'Só isso',
@@ -201,7 +201,7 @@ export const PORQUE_DEFAULTS: Record<string, string> = {
   goodValue: '1,19%',
   goodUnit: 'ao mês + IPCA, com o imóvel como garantia',
   meta1Value: '180',
-  meta1Label: 'meses pra pagar',
+  meta1Label: 'meses para pagar',
   meta2Value: '50%',
   meta2Label: 'do valor do imóvel',
   vantEyebrow: 'Vantagens',
@@ -210,7 +210,7 @@ export const PORQUE_DEFAULTS: Record<string, string> = {
   v1Text:
     'Taxas a partir de 1,19% ao mês + IPCA, muitas vezes menores que empréstimo pessoal, consignado ou cartão.',
   v2Title: 'Prazo que respira',
-  v2Text: 'Até 180 meses pra pagar. Parcelas menores, que cabem no orçamento sem sufoco.',
+  v2Text: 'Até 180 meses para pagar. Parcelas menores, que cabem no orçamento sem sufoco.',
   v3Title: 'Use como quiser',
   v3Text:
     'Quitar dívidas, reformar, investir no negócio ou realizar um plano. O dinheiro é seu.',
@@ -231,7 +231,7 @@ export const ALIBRA_DEFAULTS: Record<string, string> = {
   histP1:
     'Nascemos dentro do Grupo Stéfani, que há mais de 40 anos constrói casas e histórias pelo interior de São Paulo. Essa origem faz toda a diferença: a gente conhece o valor de um imóvel porque ajuda a levantar um.',
   histP2:
-    'Hoje usamos tecnologia pra tornar o crédito com garantia mais simples, rápido e humano, sem abrir mão do cuidado com cada detalhe.',
+    'Hoje usamos tecnologia para tornar o crédito com garantia mais simples, rápido e humano, sem abrir mão do cuidado com cada detalhe.',
   fotoFallback: 'Foto do time Libra',
   valEyebrow: 'No que a gente acredita',
   valTitle: 'Três valores que guiam tudo.',
@@ -240,7 +240,7 @@ export const ALIBRA_DEFAULTS: Record<string, string> = {
     'Condições honestas, sem pegadinha e sem cobrança escondida. O que a gente combina é o que você paga.',
   val2Title: 'Equilíbrio',
   val2Text:
-    'Colocamos as suas necessidades e as melhores condições na balança pra chegar no ponto certo pra você.',
+    'Colocamos as suas necessidades e as melhores condições na balança para chegar no ponto certo para você.',
   val3Title: 'Consciência',
   val3Text:
     'Só oferecemos crédito que faz sentido e cabe no seu bolso. Seu bem-estar financeiro vem primeiro.',
@@ -263,18 +263,18 @@ export const PARCEIROS_DEFAULTS: Record<string, string> = {
     'Correspondentes, imobiliárias, contadores e consultores: indique clientes de crédito com garantia de imóvel e seja remunerado por isso, com todo o suporte do nosso time.',
   heroCta: 'Quero ser parceiro',
   whyEyebrow: 'Por que ser parceiro',
-  whyTitle: 'Um bom negócio pra você.',
+  whyTitle: 'Um bom negócio para você.',
   why1Title: 'Comissão atrativa',
   why1Text:
     'Você é remunerado por cada operação fechada, com regras claras e pagamento em dia.',
   why2Title: 'Análise ágil',
-  why2Text: 'Retorno rápido das propostas pra você não deixar o seu cliente esperando.',
+  why2Text: 'Retorno rápido das propostas para você não deixar o seu cliente esperando.',
   why3Title: 'Suporte dedicado',
-  why3Text: 'Um time só pra te apoiar em cada etapa, do primeiro contato até a assinatura.',
+  why3Text: 'Um time só para te apoiar em cada etapa, do primeiro contato até a assinatura.',
   howEyebrow: 'Como funciona',
-  howTitle: 'Simples pra você, seguro pro cliente.',
+  howTitle: 'Simples para você, seguro para o cliente.',
   how1Title: 'Cadastre-se',
-  how1Text: 'Preencha o formulário e nosso time entra em contato pra ativar a sua parceria.',
+  how1Text: 'Preencha o formulário e nosso time entra em contato para ativar a sua parceria.',
   how2Title: 'Indique o cliente',
   how2Text: 'Envie o contato ou a documentação. A gente cuida da análise.',
   how3Title: 'Receba a comissão',
@@ -283,10 +283,10 @@ export const PARCEIROS_DEFAULTS: Record<string, string> = {
   formTitle: 'Seja um parceiro Libra.',
   formLead: 'Preencha os dados e o nosso time entra em contato.',
   formCta: 'Quero ser parceiro',
-  formError: 'Preencha os campos destacados pra gente conseguir falar com você.',
+  formError: 'Preencha os campos destacados para a gente conseguir falar com você.',
   modalTitle: 'Cadastro enviado!',
   modalText:
-    'Recebemos os seus dados. Nossa equipe vai entrar em contato em breve pra ativar a sua parceria.',
+    'Recebemos os seus dados. Nossa equipe vai entrar em contato em breve para ativar a sua parceria.',
   modalCta: 'Combinado',
 }
 
@@ -336,7 +336,7 @@ export function createDefaultSiteContent(): SiteContent {
       parceiros: { ...PARCEIROS_DEFAULTS },
       blog: {
         eyebrow: 'Blog',
-        titleLine1: 'Pra decidir',
+        titleLine1: 'Para decidir',
         titleLine2: 'com clareza.',
         lead: 'Guias diretos sobre crédito com garantia de imóvel, dívidas, patrimônio e como fazer o seu dinheiro trabalhar melhor.',
         emptyMsg: 'Nenhum post publicado ainda. Publique pelo painel Admin → Blog.',

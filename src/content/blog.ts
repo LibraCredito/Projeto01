@@ -32,7 +32,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: 'Home equity ou empréstimo pessoal: qual escolher?',
     category: 'Guia',
     summary:
-      'Comparamos prazos, juros e garantias pra você decidir com segurança.',
+      'Comparamos prazos, juros e garantias para você decidir com segurança.',
     subtitle:
       'Os dois colocam dinheiro na sua conta. A diferença está em quanto isso vai te custar — e por quanto tempo.',
     readTime: 'Leitura de 4 min',
@@ -49,12 +49,12 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: 'h2', text: 'Quando o pessoal faz sentido' },
       {
         type: 'p',
-        text: 'Pra valores pequenos e urgentes — alguns milhares de reais que você consegue quitar em poucos meses — o empréstimo pessoal pode resolver sem burocracia. A conta fecha porque o prazo é curto.',
+        text: 'Para valores pequenos e urgentes — alguns milhares de reais que você consegue quitar em poucos meses — o empréstimo pessoal pode resolver sem burocracia. A conta fecha porque o prazo é curto.',
       },
       { type: 'h2', text: 'Quando o home equity ganha de lavada' },
       {
         type: 'p',
-        text: 'Pra valores maiores — quitar várias dívidas, reformar, investir num negócio — a diferença de juros muda tudo. Em um empréstimo de R$ 100 mil, alguns pontos percentuais ao mês representam dezenas de milhares de reais ao longo do contrato.',
+        text: 'Para valores maiores — quitar várias dívidas, reformar, investir num negócio — a diferença de juros muda tudo. Em um empréstimo de R$ 100 mil, alguns pontos percentuais ao mês representam dezenas de milhares de reais ao longo do contrato.',
       },
       {
         type: 'p',
@@ -65,12 +65,12 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     slug: 'usar-imovel-pra-quitar-dividas',
-    title: 'Como usar o imóvel pra quitar dívidas caras',
+    title: 'Como usar o imóvel para quitar dívidas caras',
     category: 'Dívidas',
     summary:
-      'O passo a passo pra trocar cartão e cheque especial por uma parcela só.',
+      'O passo a passo para trocar cartão e cheque especial por uma parcela só.',
     subtitle:
-      'Cartão, cheque especial, parcelados… Dá pra trocar tudo isso por uma parcela só — e muito menor.',
+      'Cartão, cheque especial, parcelados… Dá para trocar tudo isso por uma parcela só — e muito menor.',
     readTime: 'Leitura de 4 min',
     visible: true,
     body: [
@@ -87,16 +87,16 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       {
         type: 'ul',
         items: [
-          '<strong>Liste tudo:</strong> saldo devedor, juros e parcela de cada dívida. Sem esse raio-x, não dá pra decidir.',
+          '<strong>Liste tudo:</strong> saldo devedor, juros e parcela de cada dívida. Sem esse raio-x, não dá para decidir.',
           '<strong>Simule o home equity:</strong> veja quanto ficaria a parcela única usando seu imóvel como garantia.',
           '<strong>Compare o total:</strong> quase sempre a economia é de dezenas de milhares de reais.',
-          '<strong>Quite e respire:</strong> com o crédito liberado, elimine as dívidas caras imediatamente — e não volte pro rotativo.',
+          '<strong>Quite e respire:</strong> com o crédito liberado, elimine as dívidas caras imediatamente — e não volte para o rotativo.',
         ],
       },
       { type: 'h2', text: 'O cuidado essencial' },
       {
         type: 'p',
-        text: 'Consolidar só funciona se vier junto com organização: a parcela nova precisa caber com folga no orçamento. É exatamente por isso que na Libra a gente só aprova o que faz sentido pro seu bolso — crédito consciente é isso.',
+        text: 'Consolidar só funciona se vier junto com organização: a parcela nova precisa caber com folga no orçamento. É exatamente por isso que na Libra a gente só aprova o que faz sentido para o seu bolso — crédito consciente é isso.',
       },
     ],
   },
@@ -105,7 +105,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: '5 perguntas antes de dar seu imóvel em garantia',
     category: 'Segurança',
     summary:
-      'O que checar pra tomar crédito com tranquilidade e sem arrependimento.',
+      'O que checar para tomar crédito com tranquilidade e sem arrependimento.',
     subtitle:
       'É uma decisão grande — e tomada com informação, é uma das mais inteligentes que existem.',
     readTime: 'Leitura de 4 min',
@@ -128,14 +128,14 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: 'h2', text: '3. A instituição é séria?' },
       {
         type: 'p',
-        text: 'Verifique se as operações são feitas com instituições autorizadas pelo Banco Central e desconfie de qualquer pedido de pagamento adiantado — instituição séria não cobra pra aprovar crédito.',
+        text: 'Verifique se as operações são feitas com instituições autorizadas pelo Banco Central e desconfie de qualquer pedido de pagamento adiantado — instituição séria não cobra para aprovar crédito.',
       },
       { type: 'h2', text: '4. Quais são todos os custos?' },
       {
         type: 'p',
         text: 'Além da taxa de juros, existem custos de avaliação e cartório. Peça o CET (Custo Efetivo Total) — ele mostra o valor real da operação, sem surpresa.',
       },
-      { type: 'h2', text: '5. Pra que exatamente vou usar o dinheiro?' },
+      { type: 'h2', text: '5. Para que exatamente vou usar o dinheiro?' },
       {
         type: 'p',
         text: 'Crédito barato com propósito claro constrói patrimônio. Sem propósito, vira dívida como outra qualquer. Defina o destino antes de contratar.',
@@ -147,15 +147,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     title: 'Capital de giro: o combustível do seu negócio',
     category: 'Negócios',
     summary:
-      'Quando faz sentido usar o imóvel pra destravar o crescimento da empresa.',
+      'Quando faz sentido usar o imóvel para destravar o crescimento da empresa.',
     subtitle:
-      'Quando faz sentido usar o imóvel pra destravar o crescimento da empresa — e quando não faz.',
+      'Quando faz sentido usar o imóvel para destravar o crescimento da empresa — e quando não faz.',
     readTime: 'Leitura de 4 min',
     visible: true,
     body: [
       {
         type: 'p',
-        text: 'Todo negócio conhece a cena: as vendas vão bem, mas o caixa aperta. Fornecedor pra pagar hoje, cliente que só paga em 60 dias. Capital de giro é exatamente essa ponte — e a forma de financiá-la define a saúde da empresa.',
+        text: 'Todo negócio conhece a cena: as vendas vão bem, mas o caixa aperta. Fornecedor para pagar hoje, cliente que só paga em 60 dias. Capital de giro é exatamente essa ponte — e a forma de financiá-la define a saúde da empresa.',
       },
       { type: 'h2', text: 'O problema das linhas tradicionais' },
       {
@@ -171,14 +171,14 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       {
         type: 'ul',
         items: [
-          'Expandir: novo ponto, equipamento, estoque pra alta temporada.',
+          'Expandir: novo ponto, equipamento, estoque para alta temporada.',
           'Reorganizar: trocar dívidas caras do negócio por uma só, mais barata.',
           'Investir com retorno claro: quando o ganho esperado supera com folga o custo do crédito.',
         ],
       },
       {
         type: 'p',
-        text: 'E quando não faz? Pra cobrir prejuízo recorrente sem plano de ajuste. Crédito é combustível — não conserta o motor.',
+        text: 'E quando não faz? Para cobrir prejuízo recorrente sem plano de ajuste. Crédito é combustível — não conserta o motor.',
       },
     ],
   },
@@ -205,7 +205,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: 'h2', text: 'Passo 2: escolha a linha certa' },
       {
         type: 'p',
-        text: 'Pra reformas pequenas, recursos próprios ou linhas simples resolvem. Pra reformas grandes — que transformam a casa e valorizam o imóvel — o home equity costuma ser imbatível: valores altos, prazo longo e a menor taxa do mercado.',
+        text: 'Para reformas pequenas, recursos próprios ou linhas simples resolvem. Para reformas grandes — que transformam a casa e valorizam o imóvel — o home equity costuma ser imbatível: valores altos, prazo longo e a menor taxa do mercado.',
       },
       { type: 'h2', text: 'Passo 3: cronograma financeiro' },
       {
@@ -214,7 +214,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
       {
         type: 'p',
-        text: 'Detalhe bonito: uma boa reforma valoriza o imóvel. Ou seja, você usa o patrimônio pra aumentar o próprio patrimônio.',
+        text: 'Detalhe bonito: uma boa reforma valoriza o imóvel. Ou seja, você usa o patrimônio para aumentar o próprio patrimônio.',
       },
     ],
   },
@@ -256,7 +256,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: 'h2', text: 'LTV baixo é bom sinal' },
       {
         type: 'p',
-        text: 'Quanto menor o LTV, menor o risco da operação — e melhores tendem a ser as condições. É a lógica do equilíbrio: uma operação saudável pros dois lados.',
+        text: 'Quanto menor o LTV, menor o risco da operação — e melhores tendem a ser as condições. É a lógica do equilíbrio: uma operação saudável para os dois lados.',
       },
     ],
   },

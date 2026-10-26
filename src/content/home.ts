@@ -22,36 +22,6 @@ export const TESTIMONIALS = [
   },
 ] as const
 
-export const BRAZIL_STATES = [
-  'Acre',
-  'Alagoas',
-  'Amapá',
-  'Amazonas',
-  'Bahia',
-  'Ceará',
-  'Distrito Federal',
-  'Espírito Santo',
-  'Goiás',
-  'Maranhão',
-  'Mato Grosso',
-  'Mato Grosso do Sul',
-  'Minas Gerais',
-  'Pará',
-  'Paraíba',
-  'Paraná',
-  'Pernambuco',
-  'Piauí',
-  'Rio de Janeiro',
-  'Rio Grande do Norte',
-  'Rio Grande do Sul',
-  'Rondônia',
-  'Roraima',
-  'Santa Catarina',
-  'São Paulo',
-  'Sergipe',
-  'Tocantins',
-] as const
-
 export const HERO_IMAGE =
   'https://images.unsplash.com/photo-1555953348-ab36203d4cad?w=1600&q=80&auto=format&fit=crop'
 

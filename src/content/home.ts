@@ -27,6 +27,8 @@ export const HERO_IMAGE =
 
 /** Vídeo do ciclista no hero (extraído do site de exemplo). */
 export const HERO_VIDEO = '/videos/hero-bike.mp4'
+/** Primeiro quadro do vídeo do hero, exibido enquanto o vídeo carrega. */
+export const HERO_VIDEO_POSTER = '/videos/hero-bike-poster.webp'
 
 export const USECASE_IMAGE = '/images/img-01.webp'
 export const ABOUT_IMAGE = '/images/img-02.webp'

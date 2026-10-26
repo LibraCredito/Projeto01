@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
 import { Wrap } from '@/components/ui/Wrap'
-import { HERO_IMAGE, HERO_VIDEO } from '@/content/home'
+import { HERO_IMAGE, HERO_VIDEO, HERO_VIDEO_POSTER } from '@/content/home'
 import { HOME_DEFAULTS } from '@/features/admin/defaults/siteContent'
 import { useAdmin } from '@/features/admin/AdminProvider'
 import { resolveMediaUrl, uploadImage } from '@/features/admin/api/client'
@@ -130,6 +130,16 @@ export function HomePage() {
   return (
     <main>
       <section className="hero hero-full">
+        {heroVideoSrc === HERO_VIDEO && heroMedia !== 'fallback' ? (
+          <img
+            className="hero-poster"
+            src={HERO_VIDEO_POSTER}
+            alt=""
+            aria-hidden
+            fetchPriority="high"
+            decoding="async"
+          />
+        ) : null}
         {pageLoaded && heroMedia !== 'fallback' ? (
           <video
             key={heroVideoSrc}

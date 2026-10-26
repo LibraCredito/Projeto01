@@ -465,6 +465,7 @@ img {
 }
 
 .hero-video,
+.hero-poster,
 .hero-fallback {
   position: absolute;
   inset: 0;

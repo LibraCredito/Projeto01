@@ -72,6 +72,9 @@ export function resolveMediaUrl(url: string | undefined | null): string {
   if (/^(https?:|data:|blob:)/i.test(url)) return url
 
   const path = url.startsWith('/') ? url : `/${url}`
+  if (/^\/images\/img-\d+\.jpg$/.test(path)) {
+    return path.replace(/\.jpg$/, '.webp')
+  }
   if (
     path.startsWith('/videos/') ||
     path.startsWith('/brazil-map') ||

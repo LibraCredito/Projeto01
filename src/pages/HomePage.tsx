@@ -96,14 +96,24 @@ export function HomePage() {
 
   /** loading = só navy; video = vídeo pronto; fallback = imagem após erro ou 5s */
   const [heroMedia, setHeroMedia] = useState<'loading' | 'video' | 'fallback'>('loading')
+  /** O vídeo só começa a baixar após o load, para não competir com fontes/JS críticos. */
+  const [pageLoaded, setPageLoaded] = useState(() => document.readyState === 'complete')
 
   useEffect(() => {
+    if (pageLoaded) return
+    const onLoad = () => setPageLoaded(true)
+    window.addEventListener('load', onLoad, { once: true })
+    return () => window.removeEventListener('load', onLoad)
+  }, [pageLoaded])
+
+  useEffect(() => {
+    if (!pageLoaded) return
     setHeroMedia('loading')
     const t = window.setTimeout(() => {
       setHeroMedia((prev) => (prev === 'loading' ? 'fallback' : prev))
     }, 5000)
     return () => window.clearTimeout(t)
-  }, [heroVideoSrc])
+  }, [heroVideoSrc, pageLoaded])
 
   function onHeroVideoReady() {
     setHeroMedia((prev) => (prev === 'fallback' ? prev : 'video'))
@@ -120,7 +130,7 @@ export function HomePage() {
   return (
     <main>
       <section className="hero hero-full">
-        {heroMedia !== 'fallback' ? (
+        {pageLoaded && heroMedia !== 'fallback' ? (
           <video
             key={heroVideoSrc}
             className={cn('hero-video', heroMedia === 'video' && 'is-ready')}
@@ -142,6 +152,7 @@ export function HomePage() {
             <img
               src={heroSrc}
               alt=""
+              decoding="async"
               aria-hidden
               onError={(e) => {
                 e.currentTarget.src = HERO_IMAGE
@@ -613,6 +624,10 @@ export function HomePage() {
               <img
                 className="br-map"
                 src="/brazil-map.svg"
+                width={552}
+                height={567}
+                loading="lazy"
+                decoding="async"
                 alt="Mapa do Brasil: a Libra atende o país inteiro"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none'

@@ -33,7 +33,13 @@ export function Photo({
       style={{ aspectRatio: aspect, borderRadius: radius }}
     >
       {showImg ? (
-        <img src={src} alt={alt} onError={() => setFailed(true)} />
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+        />
       ) : (
         <div className="fb">
           <svg

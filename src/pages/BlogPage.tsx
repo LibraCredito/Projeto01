@@ -80,7 +80,7 @@ export function BlogPage() {
                 return (
                   <Link key={post.id || post.slug} className="blogcard" to={blogArticlePath(post.slug)}>
                     <div className="bimg">
-                      {capa ? <img src={capa} alt="" /> : null}
+                      {capa ? <img src={capa} alt="" loading="lazy" decoding="async" /> : null}
                       <span className="cat">{post.categoria}</span>
                     </div>
                     <div className="bbody">

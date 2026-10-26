@@ -1,5 +1,29 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/comfortaa-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/instrument-serif-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/instrument-serif-latin-italic.woff2') format('woff2');
+}
+
 @theme {
   --color-navy: #0b1f3f;
   --color-navy-2: #12294d;
@@ -2842,6 +2866,10 @@ body.editing .doc-reedit{display:block}
 
 .vshell{position:relative;border-radius:18px;overflow:hidden;background:var(--navy);aspect-ratio:16/9;cursor:default}
 .vshell iframe,.vshell video{width:100%;height:100%;border:0;display:block;object-fit:cover}
+.vposter{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer;display:block}
+.vposter img{width:100%;height:100%;object-fit:cover;display:block}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform .2s ease;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+.vposter:hover .vplay,.vposter:focus-visible .vplay{transform:translate(-50%,-50%) scale(1.08)}
 .vph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--cream);text-align:center;padding:20px}
 .vph b{font-family:"Instrument Serif",serif;font-size:22px;font-weight:500;color:var(--gold)}
 .vph span{font-size:13px;opacity:.8}

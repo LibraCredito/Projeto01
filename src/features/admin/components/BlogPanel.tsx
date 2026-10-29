@@ -1,12 +1,23 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 import { BLOG_CATEGORIES } from '@/content/blog'
 import { useAdmin } from '@/features/admin/AdminProvider'
 import { resolveMediaUrl, uploadImage } from '@/features/admin/api/client'
 import type { BlogPost } from '@/features/admin/types'
+import {
+  isBlogHtmlEmpty,
+  isHtmlPost,
+  plainTextToHtml,
+  resolveBlogHtmlImages,
+  toStoredBlogHtml,
+} from '@/features/admin/utils/blogHtml'
 import { slugify } from '@/features/admin/utils/slugify'
 import { ROUTES, blogArticlePath } from '@/lib/constants/routes'
+
+const BlogEditor = lazy(() =>
+  import('@/features/admin/components/BlogEditor').then((m) => ({ default: m.BlogEditor })),
+)
 
 type FormState = {
   titulo: string
@@ -40,7 +51,9 @@ function fromPost(p: BlogPost): FormState {
     resumo: p.resumo,
     subtitulo: p.subtitulo,
     leitura: p.leitura,
-    corpoTexto: p.corpoTexto,
+    corpoTexto: isHtmlPost(p)
+      ? resolveBlogHtmlImages(p.corpoTexto || '')
+      : plainTextToHtml(p.corpoTexto || ''),
     capaUrl: p.capaUrl,
     publicado: p.publicado,
   }
@@ -72,7 +85,11 @@ export function BlogPanel() {
   function startEdit(p: BlogPost) {
     setEditingId(p.id)
     setForm(fromPost(p))
-    setMsg(`Editando: ${p.titulo}`)
+    setMsg(
+      isHtmlPost(p)
+        ? `Editando: ${p.titulo}`
+        : `Editando: ${p.titulo} — este post estava em texto simples e foi convertido para o editor. Confira a formatação antes de salvar.`,
+    )
     if (fileRef.current) fileRef.current.value = ''
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -95,7 +112,7 @@ export function BlogPanel() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!form.titulo.trim() || !form.corpoTexto.trim()) {
+    if (!form.titulo.trim() || isBlogHtmlEmpty(form.corpoTexto)) {
       setMsg('Preencha título e conteúdo.')
       return
     }
@@ -108,7 +125,8 @@ export function BlogPanel() {
       resumo: form.resumo.trim(),
       subtitulo: form.subtitulo.trim(),
       leitura: form.leitura.trim() || 'Leitura de 4 min',
-      corpoTexto: form.corpoTexto,
+      corpoTexto: toStoredBlogHtml(form.corpoTexto),
+      corpoFormato: 'html' as const,
       capaUrl: form.capaUrl,
       publicado: form.publicado,
     }
@@ -171,9 +189,8 @@ export function BlogPanel() {
       <div className="adm-card">
         <h3>{editingId ? 'Editar post' : 'Novo post'}</h3>
         <p className="hint">
-          CRUD direto na API (<code>/admin/blog</code>). Texto puro: títulos curtos viram seções,
-          linhas com “-” viram listas. A capa usa <code>POST /upload/imagem</code> →{' '}
-          <code>capaUrl</code>.
+          O conteúdo usa o editor: títulos, negrito, listas, links, imagens (enviadas para o
+          servidor) e vídeos do YouTube. Imagens aceitas: JPG, PNG ou WEBP de até 5 MB.
         </p>
         <form className="adm-grid" onSubmit={(e) => void onSubmit(e)}>
           <div className="adm-field">
@@ -270,12 +287,14 @@ export function BlogPanel() {
           </div>
           <div className="adm-field full">
             <label>Conteúdo</label>
-            <textarea
-              value={form.corpoTexto}
-              onChange={(e) => patchForm({ corpoTexto: e.target.value })}
-              placeholder="Cole ou escreva o texto do artigo aqui…"
-              rows={12}
-            />
+            <Suspense fallback={<div className="adm-editor-loading">Carregando editor…</div>}>
+              <BlogEditor
+                key={editingId ?? 'novo'}
+                value={form.corpoTexto}
+                onChange={(html) => patchForm({ corpoTexto: html })}
+                disabled={busy}
+              />
+            </Suspense>
           </div>
           <div className="adm-actions full">
             <button type="submit" className="btn btn-blue" disabled={busy}>

@@ -11,6 +11,8 @@ export type Lead = {
   origem?: string
 }
 
+export type BlogCorpoFormato = 'texto' | 'html'
+
 export type BlogPost = {
   id: string
   slug: string
@@ -19,7 +21,10 @@ export type BlogPost = {
   resumo: string
   subtitulo: string
   leitura: string
+  /** Ausente na listagem pública (GET /blog). */
   corpoTexto: string
+  /** 'html' = editor TinyMCE; 'texto' = posts antigos em texto puro. */
+  corpoFormato?: BlogCorpoFormato
   capaUrl?: string
   publicado: boolean
   publicadoEm: string

@@ -175,8 +175,9 @@ export function LeadsPanel() {
         </button>
       </div>
       <p className="adm-note">
-        <b>Como funciona:</b> simulações e parceiros vão para <code>POST /leads</code>. O painel
-        lista via <code>GET /admin/leads</code>. Use “Buscar do servidor” para atualizar.
+        <b>Como funciona:</b> simulações vão para <code>POST /leads</code>. Cadastros de
+        parceiros vão para <code>POST /parceiros</code>. O painel lista via{' '}
+        <code>GET /admin/leads</code>. Use “Buscar do servidor” para atualizar.
       </p>
     </>
   )

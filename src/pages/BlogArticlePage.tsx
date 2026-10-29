@@ -7,7 +7,15 @@ import { Section } from '@/components/ui/Section'
 import { Wrap } from '@/components/ui/Wrap'
 import type { BlogBlock } from '@/content/blog'
 import { formatBlogBody, getPostBySlug, resolveMediaUrl, type BlogPost } from '@/features/admin'
+import { isHtmlPost, resolveBlogHtmlImages } from '@/features/admin/utils/blogHtml'
 import { ROUTES } from '@/lib/constants/routes'
+
+/** HTML já sanitizado pela API; aqui só resolve imagens e aplica carregamento tardio. */
+function prepareArticleHtml(html: string): string {
+  return resolveBlogHtmlImages(html)
+    .replace(/<img\b(?![^>]*\bloading=)/gi, '<img loading="lazy" decoding="async"')
+    .replace(/<iframe\b(?![^>]*\bloading=)/gi, '<iframe loading="lazy"')
+}
 
 function Block({ block }: { block: BlogBlock }) {
   if (block.type === 'h2') return <h2>{block.text}</h2>
@@ -75,7 +83,8 @@ export function BlogArticlePage() {
     )
   }
 
-  const body = formatBlogBody(post.corpoTexto)
+  const html = isHtmlPost(post) ? prepareArticleHtml(post.corpoTexto || '') : null
+  const body = html === null ? formatBlogBody(post.corpoTexto || '') : []
   const capa = resolveMediaUrl(post.capaUrl)
 
   return (
@@ -99,11 +108,15 @@ export function BlogArticlePage() {
                 <img src={capa} alt="" />
               </div>
             ) : null}
-            <div className="artbody">
-              {body.map((block, i) => (
-                <Block key={i} block={block} />
-              ))}
-            </div>
+            {html !== null ? (
+              <div className="artbody artbody-html" dangerouslySetInnerHTML={{ __html: html }} />
+            ) : (
+              <div className="artbody">
+                {body.map((block, i) => (
+                  <Block key={i} block={block} />
+                ))}
+              </div>
+            )}
             <div className="artcta">
               <h3>Que tal ver isso na prática?</h3>
               <p>

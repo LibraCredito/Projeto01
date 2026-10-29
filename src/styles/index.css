@@ -1534,6 +1534,21 @@ img {
   margin: -2px 0 0;
 }
 
+.pform-retry {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--blue);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* article */
 .artwrap {
   max-width: 44rem;
@@ -1585,6 +1600,136 @@ img {
   line-height: 1.7;
   color: var(--ink);
   margin-bottom: 8px;
+}
+
+.artbody ul {
+  list-style: disc;
+}
+
+.artbody ol {
+  list-style: decimal;
+}
+
+.artbody li::marker {
+  color: var(--gold);
+}
+
+.artbody-html h3 {
+  font-family: var(--font-serif);
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 30px 0 12px;
+}
+
+.artbody-html h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 26px 0 10px;
+}
+
+.artbody-html a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.artbody-html strong,
+.artbody-html b {
+  font-weight: 700;
+}
+
+.artbody-html blockquote {
+  border-left: 3px solid var(--gold);
+  margin: 0 0 22px;
+  padding: 4px 0 4px 18px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--blue);
+}
+
+.artbody-html blockquote p {
+  font-size: inherit;
+  color: inherit;
+  margin-bottom: 0;
+}
+
+.artbody-html img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin: 8px 0 22px;
+}
+
+.artbody-html figure {
+  margin: 8px 0 26px;
+}
+
+.artbody-html figure img {
+  margin-bottom: 8px;
+}
+
+.artbody-html figcaption {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.artbody-html hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 32px 0;
+}
+
+.artbody-html table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 24px;
+  font-size: 15.5px;
+}
+
+@media (max-width: 640px) {
+  .artbody-html table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.artbody-html th,
+.artbody-html td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.artbody-html th {
+  background: var(--cream-2, #efe7d5);
+  font-weight: 700;
+}
+
+.artbody-html iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 16px;
+  margin: 8px 0 24px;
+}
+
+.adm-editor-loading {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.6px dashed var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .artcta {
@@ -2457,6 +2602,16 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.pmodal-check.wait {
+  background: rgba(52, 84, 140, 0.12);
+  color: var(--blue);
+}
+
+.pmodal-card p strong {
+  color: var(--navy);
+  font-weight: 700;
 }
 
 .pmodal-card h3 {

@@ -37,6 +37,7 @@ export function createPostLocal(
     subtitulo: input.subtitulo,
     leitura: input.leitura,
     corpoTexto: input.corpoTexto,
+    corpoFormato: input.corpoFormato ?? 'texto',
     capaUrl: input.capaUrl,
     publicado: input.publicado,
     publicadoEm: new Date().toISOString(),

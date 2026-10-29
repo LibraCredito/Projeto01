@@ -1,11 +1,19 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
 import { Wrap } from '@/components/ui/Wrap'
-import { useLeads, useAdmin } from '@/features/admin'
+import { useAdmin } from '@/features/admin'
 import { usePageField } from '@/features/admin/hooks/usePageField'
+import {
+  enviarParceiro,
+  listarRamos,
+  textoEspera,
+  ParceiroFormError,
+  type ParceiroRecente,
+  type RamoParceiro,
+} from '@/features/parceiros/api'
 import { cn } from '@/lib/utils'
 
 function maskPhone(value: string) {
@@ -15,60 +23,133 @@ function maskPhone(value: string) {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
 }
 
+type FieldErrors = {
+  nome: boolean
+  email: boolean
+  tel: boolean
+  cidade: boolean
+  ramo: boolean
+}
+
+const EMPTY_ERRORS: FieldErrors = {
+  nome: false,
+  email: false,
+  tel: false,
+  cidade: false,
+  ramo: false,
+}
+
 export function ParceirosPage() {
   const { Field: F } = usePageField('parceiros')
   const { editing } = useAdmin()
-  const { addLead } = useLeads()
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [tel, setTel] = useState('')
-  const [tipo, setTipo] = useState('Correspondente')
+  const [ramoId, setRamoId] = useState('')
   const [cidade, setCidade] = useState('')
-  const [errors, setErrors] = useState<Record<string, boolean>>({})
+  const [ramos, setRamos] = useState<RamoParceiro[]>([])
+  const [ramosStatus, setRamosStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [ramosTick, setRamosTick] = useState(0)
+  const [errors, setErrors] = useState<FieldErrors>(EMPTY_ERRORS)
   const [showMsg, setShowMsg] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [serverMsg, setServerMsg] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
+  const [modal, setModal] = useState<'sucesso' | 'recente' | null>(null)
+  const [recente, setRecente] = useState<ParceiroRecente | null>(null)
+  const sendingRef = useRef(false)
+
+  useEffect(() => {
+    let active = true
+    setRamosStatus('loading')
+    listarRamos()
+      .then((list) => {
+        if (!active) return
+        setRamos(list)
+        setRamosStatus(list.length ? 'ready' : 'error')
+      })
+      .catch(() => {
+        if (!active) return
+        setRamos([])
+        setRamosStatus('error')
+      })
+    return () => {
+      active = false
+    }
+  }, [ramosTick])
 
   function validate() {
-    const next = {
+    const next: FieldErrors = {
       nome: !nome.trim(),
       email: !email.trim() || !email.includes('@'),
       tel: tel.replace(/\D/g, '').length < 10,
       cidade: !cidade.trim(),
+      ramo: !ramoId,
     }
     setErrors(next)
     const ok = !Object.values(next).some(Boolean)
     setShowMsg(!ok)
+    if (!ok) setServerMsg(null)
     return ok
+  }
+
+  function marcarErrosServidor(messages: string[]) {
+    const blob = messages.join(' ').toLowerCase()
+    setErrors({
+      nome: blob.includes('nome'),
+      email: blob.includes('email') || blob.includes('e-mail'),
+      tel: blob.includes('telefone'),
+      cidade: blob.includes('cidade'),
+      ramo: blob.includes('ramo'),
+    })
   }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
-    if (editing) return
+    if (editing || sendingRef.current) return
     if (!validate()) return
+
+    sendingRef.current = true
+    setSending(true)
+    setServerMsg(null)
+    setShowMsg(false)
+
     try {
-      await addLead({
-        tipo: 'parceiro',
-        dados: {
-          nome: nome.trim(),
-          email: email.trim(),
-          tel,
-          tipoParceiro: tipo,
-          cidade: cidade.trim(),
-        },
-        origem: '/parceiros',
+      const result = await enviarParceiro({
+        nome: nome.trim(),
+        email: email.trim(),
+        telefone: tel,
+        cidade: cidade.trim(),
+        ramoId: Number(ramoId),
       })
-      setModalOpen(true)
+
+      if (!result.ok) {
+        setRecente(result)
+        setModal('recente')
+        return
+      }
+
+      setModal('sucesso')
+      setRecente(null)
       setNome('')
       setEmail('')
       setTel('')
       setCidade('')
-      setTipo('Correspondente')
-      setShowMsg(false)
-      setErrors({})
-    } catch {
-      setShowMsg(true)
+      setRamoId('')
+      setErrors(EMPTY_ERRORS)
+    } catch (err) {
+      if (err instanceof ParceiroFormError && err.kind === 'validacao') {
+        setServerMsg(err.errors.join(' · '))
+        marcarErrosServidor(err.errors)
+        return
+      }
+      setServerMsg('Não conseguimos enviar o cadastro agora. Tente de novo em alguns minutos.')
+    } finally {
+      sendingRef.current = false
+      setSending(false)
     }
   }
+
+  const espera = recente ? textoEspera(recente) : null
 
   return (
     <main>
@@ -206,13 +287,33 @@ export function ParceirosPage() {
             </div>
             <div className="pfield">
               <label htmlFor="p-tipo">Tipo de parceiro</label>
-              <select id="p-tipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
-                <option>Correspondente</option>
-                <option>Imobiliária</option>
-                <option>Contador</option>
-                <option>Consultor</option>
-                <option>Outro</option>
+              <select
+                id="p-tipo"
+                className={cn(errors.ramo && 'err')}
+                value={ramoId}
+                disabled={ramosStatus !== 'ready' || sending}
+                onChange={(e) => setRamoId(e.target.value)}
+              >
+                {ramosStatus === 'loading' ? <option value="">Carregando…</option> : null}
+                {ramosStatus === 'error' ? (
+                  <option value="">Não foi possível carregar</option>
+                ) : null}
+                {ramosStatus === 'ready' ? <option value="">Selecione o ramo</option> : null}
+                {ramos.map((ramo) => (
+                  <option key={ramo.id} value={String(ramo.id)}>
+                    {ramo.nome}
+                  </option>
+                ))}
               </select>
+              {ramosStatus === 'error' ? (
+                <button
+                  type="button"
+                  className="pform-retry"
+                  onClick={() => setRamosTick((n) => n + 1)}
+                >
+                  Tentar carregar de novo
+                </button>
+              ) : null}
             </div>
             <div className="pfield full">
               <label htmlFor="p-cidade">Cidade / UF</label>
@@ -225,25 +326,31 @@ export function ParceirosPage() {
               />
             </div>
             {showMsg ? <F k="formError" as="p" className="pform-msg" /> : null}
+            {serverMsg ? (
+              <p className="pform-msg" role="alert">
+                {serverMsg}
+              </p>
+            ) : null}
             <div className="full">
-              <Button type="submit" variant="blue" arrow className="w-full justify-center">
-                <F k="formCta" />
+              <Button
+                type="submit"
+                variant="blue"
+                arrow
+                className="w-full justify-center"
+                disabled={sending || ramosStatus !== 'ready'}
+              >
+                {sending ? 'Enviando…' : <F k="formCta" />}
               </Button>
             </div>
           </form>
         </Wrap>
       </Section>
 
-      {modalOpen ? (
+      {modal === 'sucesso' ? (
         <div className="pmodal">
-          <div className="pmodal-back" onClick={() => setModalOpen(false)} />
-          <div className="pmodal-card" role="dialog" aria-modal="true" aria-labelledby="pmodal-title">
-            <button
-              type="button"
-              className="pmodal-x"
-              aria-label="Fechar"
-              onClick={() => setModalOpen(false)}
-            >
+          <div className="pmodal-back" onClick={() => setModal(null)} />
+          <div className="pmodal-card" role="dialog" aria-modal="true" aria-label="Cadastro enviado">
+            <button type="button" className="pmodal-x" aria-label="Fechar" onClick={() => setModal(null)}>
               ✕
             </button>
             <div className="pmodal-check">
@@ -263,8 +370,50 @@ export function ParceirosPage() {
             </div>
             <F k="modalTitle" as="h3" className="serif" />
             <F k="modalText" as="p" multiline />
-            <Button variant="blue" arrow onClick={() => setModalOpen(false)}>
+            <Button variant="blue" arrow onClick={() => setModal(null)}>
               <F k="modalCta" />
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {modal === 'recente' && recente ? (
+        <div className="pmodal">
+          <div className="pmodal-back" onClick={() => setModal(null)} />
+          <div className="pmodal-card" role="dialog" aria-modal="true" aria-labelledby="pmodal-recente-title">
+            <button type="button" className="pmodal-x" aria-label="Fechar" onClick={() => setModal(null)}>
+              ✕
+            </button>
+            <div className="pmodal-check wait">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+            </div>
+            <h3 id="pmodal-recente-title" className="serif">
+              Cadastro já recebido
+            </h3>
+            <p>
+              {recente.mensagem}
+              {espera ? (
+                <>
+                  <br />
+                  <strong>{espera}</strong>
+                </>
+              ) : null}
+            </p>
+            <Button variant="blue" arrow onClick={() => setModal(null)}>
+              Entendi
             </Button>
           </div>
         </div>

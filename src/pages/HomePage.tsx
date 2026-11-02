@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { BrazilMap } from '@/components/BrazilMap'
 import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
@@ -631,21 +632,7 @@ export function HomePage() {
               </div>
             </div>
             <div>
-              <img
-                className="br-map"
-                src="/brazil-map.svg"
-                width={552}
-                height={567}
-                loading="lazy"
-                decoding="async"
-                alt="Mapa do Brasil: a Libra atende o país inteiro"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                  const sibling = e.currentTarget.nextElementSibling as HTMLElement | null
-                  if (sibling) sibling.style.display = 'block'
-                }}
-              />
-              <div className="br-dots" style={{ display: 'none' }} aria-hidden />
+              <BrazilMap />
               <div className="br-legend">
                 <i /> <H k="brLegend" />
               </div>

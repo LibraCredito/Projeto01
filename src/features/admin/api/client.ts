@@ -9,6 +9,7 @@
  *   GET/POST/PUT/DELETE /admin/blog
  *   POST   /leads  |  GET/PATCH /admin/leads
  *   GET    /parceiros/ramos  |  POST /parceiros   (sem token)
+ *   POST   /simulacao   (sem token)
  *   POST   /upload/imagem  |  POST /upload/video
  */
 

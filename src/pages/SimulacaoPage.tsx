@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 
 import { Button } from '@/components/ui/Button'
+import { CityField } from '@/features/simulator/CityField'
 import { Wrap } from '@/components/ui/Wrap'
-import { useLeads } from '@/features/admin'
+import { enviarSimulacao, SimulacaoFormError, textoEspera, textoMotivo, type SimulacaoRecente } from '@/features/simulator/api'
 import { cn } from '@/lib/utils'
 
 const MIN_IMOVEL = 200_000
@@ -98,7 +99,6 @@ const URGENCY_OPTS: { id: NonNullable<Urgency>; label: string; hint: string }[] 
 ]
 
 export function SimulacaoPage() {
-  const { addLead } = useLeads()
   const [step, setStep] = useState(1)
   const [urgency, setUrgency] = useState<Urgency>(null)
 
@@ -121,7 +121,11 @@ export function SimulacaoPage() {
   const [tel, setTel] = useState('')
   const [email, setEmail] = useState('')
   const [formWarn, setFormWarn] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [sending, setSending] = useState(false)
+  const sendingRef = useRef(false)
+  const [modal, setModal] = useState<'sucesso' | 'recente' | null>(null)
+  const [recente, setRecente] = useState<SimulacaoRecente | null>(null)
 
   const imovel = parseMoney(imovelStr)
   const saldo = parseMoney(saldoStr)
@@ -164,7 +168,7 @@ export function SimulacaoPage() {
         }
         setRua(data.logradouro ?? '')
         setBairro(data.bairro ?? '')
-        setCidade(data.localidade && data.uf ? `${data.localidade} / ${data.uf}` : '')
+        setCidade(data.localidade && data.uf ? `${data.localidade} - ${data.uf}` : '')
         setCepStatus('Endereço preenchido pelo CEP.')
       })
       .catch(() => {
@@ -188,48 +192,83 @@ export function SimulacaoPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  function reiniciar() {
+    setModal(null)
+    setRecente(null)
+    setUrgency(null)
+    setImovelStr('')
+    setCep('')
+    setCepStatus('')
+    setRua('')
+    setBairro('')
+    setCidade('')
+    setNumero('')
+    setComplemento('')
+    setFinanciado('nao')
+    setSaldoStr('')
+    setAmountStr('')
+    setPrazo(120)
+    setAmort('price')
+    setNome('')
+    setTel('')
+    setEmail('')
+    setFormWarn(false)
+    setFormError('')
+    go(1)
+  }
+
   async function submitLead(e: FormEvent) {
     e.preventDefault()
-    const ok =
+    const contatoOk =
       nome.trim().length > 2 &&
       tel.replace(/\D/g, '').length >= 10 &&
       email.includes('@')
-    setFormWarn(!ok)
-    if (!ok) return
-    const parcela =
-      amort === 'price'
-        ? estimate.parcela
-        : estimate.sac.first
+    setFormWarn(!contatoOk)
+    setFormError('')
+    if (!contatoOk) return
+    if (!cidade.trim()) {
+      setFormError('Volta um passo e escolhe a cidade da garantia.')
+      return
+    }
+    if (sendingRef.current) return
+
+    const parcelaBruta = amort === 'price' ? estimate.parcela : estimate.sac.first
+    const urgencia = URGENCY_OPTS.find((o) => o.id === urgency)?.label
+    sendingRef.current = true
+    setSending(true)
     try {
-      await addLead({
-        tipo: 'simulacao',
-        dados: {
-          nome: nome.trim(),
-          tel,
-          email: email.trim(),
-          imovel,
-          credito: creditoFinal,
-          prazo,
-          amort,
-          cidade,
-          cep,
-          urgencia: urgency,
-          financiado,
-          saldo: financiado === 'sim' ? saldo : null,
-        },
-        resultado: {
-          parcela: Math.round(parcela),
-          renda: Math.round(estimate.renda),
-          custas: Math.round(estimate.custas),
-          imovel,
-          credito: creditoFinal,
-          prazo,
-        },
-        origem: '/simulacao',
+      const resultado = await enviarSimulacao({
+        nome: nome.trim(),
+        email: email.trim(),
+        tel,
+        credito: creditoFinal,
+        prazo,
+        imovel,
+        cidade: cidade.trim(),
+        parcela: parcelaBruta > 0 ? Math.round(parcelaBruta * 100) / 100 : undefined,
+        amort,
+        urgencia,
+        financiado: financiado === 'sim' ? 'sim' : 'nao',
+        origem: window.location.href,
       })
-      setModalOpen(true)
-    } catch {
-      setFormWarn(true)
+      if (resultado.ok) {
+        setRecente(null)
+        setModal('sucesso')
+      } else {
+        setRecente(resultado)
+        setModal('recente')
+      }
+    } catch (err) {
+      if (err instanceof SimulacaoFormError && err.kind === 'validacao') {
+        setFormError(err.errors.join(' · '))
+      } else if (err instanceof SimulacaoFormError) {
+        setFormError(err.errors[0])
+      } else {
+        setFormError('Não conseguimos enviar a simulação agora. Tente de novo em alguns minutos.')
+      }
+    } finally {
+      sendingRef.current = false
+      setSending(false)
     }
   }
 
@@ -267,6 +306,9 @@ export function SimulacaoPage() {
       lead: 'Seus dados para enviarmos a proposta — e você escolhe se quer atendimento automático ou humano.',
     },
   ][step - 1]
+
+  const espera = recente ? textoEspera(recente) : null
+  const motivo = recente ? textoMotivo(recente.motivo) : null
 
   return (
     <main>
@@ -364,11 +406,7 @@ export function SimulacaoPage() {
                     </div>
                     <div className="fcard">
                       <label>Cidade / UF</label>
-                      <input
-                        value={cidade}
-                        onChange={(e) => setCidade(e.target.value)}
-                        placeholder="—"
-                      />
+                      <CityField value={cidade} onChange={setCidade} />
                     </div>
                     <div className="fcard">
                       <label>Número</label>
@@ -594,7 +632,11 @@ export function SimulacaoPage() {
                         placeholder="voce@email.com"
                       />
                     </div>
-                    {formWarn ? (
+                    {formError ? (
+                      <div className="full whint warn" style={{ margin: '-4px 0 0' }}>
+                        {formError}
+                      </div>
+                    ) : formWarn ? (
                       <div className="full whint warn" style={{ margin: '-4px 0 0' }}>
                         Confere os campos destacados? Assim a proposta chega certinha para você. 🙂
                       </div>
@@ -614,8 +656,8 @@ export function SimulacaoPage() {
                     <Button type="button" variant="ghost-d" onClick={() => go(3)}>
                       ← Voltar
                     </Button>
-                    <Button type="submit" variant="gold" arrow>
-                      Ver minha proposta
+                    <Button type="submit" variant="gold" arrow disabled={sending}>
+                      {sending ? 'Enviando…' : 'Ver minha proposta'}
                     </Button>
                   </div>
                 </form>
@@ -625,15 +667,15 @@ export function SimulacaoPage() {
         </Wrap>
       </section>
 
-      {modalOpen ? (
+      {modal === 'sucesso' ? (
         <div className="pmodal">
-          <div className="pmodal-back" onClick={() => setModalOpen(false)} />
+          <div className="pmodal-back" onClick={reiniciar} />
           <div className="pmodal-card" role="dialog" aria-modal aria-labelledby="smodal-title">
             <button
               type="button"
               className="pmodal-x"
               aria-label="Fechar"
-              onClick={() => setModalOpen(false)}
+              onClick={reiniciar}
             >
               ✕
             </button>
@@ -659,8 +701,61 @@ export function SimulacaoPage() {
               Recebemos a sua simulação. Nossa equipe vai te chamar em breve para apresentar a
               proposta do seu jeito. 💙
             </p>
-            <Button variant="blue" arrow onClick={() => setModalOpen(false)}>
+            <Button variant="blue" arrow onClick={reiniciar}>
               Combinado
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {modal === 'recente' && recente ? (
+        <div className="pmodal">
+          <div className="pmodal-back" onClick={() => setModal(null)} />
+          <div className="pmodal-card" role="dialog" aria-modal aria-labelledby="smodal-recente">
+            <button
+              type="button"
+              className="pmodal-x"
+              aria-label="Fechar"
+              onClick={() => setModal(null)}
+            >
+              ✕
+            </button>
+            <div className="pmodal-check wait">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+            </div>
+            <h3 className="serif" id="smodal-recente">
+              Simulação já recebida
+            </h3>
+            <p>
+              {recente.mensagem}
+              {motivo ? (
+                <>
+                  <br />
+                  {motivo}
+                </>
+              ) : null}
+              {espera ? (
+                <>
+                  <br />
+                  <strong>{espera}</strong>
+                </>
+              ) : null}
+            </p>
+            <Button variant="blue" arrow onClick={() => setModal(null)}>
+              Entendi
             </Button>
           </div>
         </div>

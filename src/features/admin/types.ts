@@ -39,7 +39,7 @@ export type SiteMedia = {
   sobreImageUrl: string
   homeVideoUrl?: string
   depoimentoVideoUrl?: string
-  testimonialImages: [string, string, string]
+  testimonialImages: string[]
 }
 
 export type NavLabels = {

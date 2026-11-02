@@ -16,6 +16,17 @@ import type { SiteContent } from '@/features/admin/types'
 import { ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
+const MAX_DEPOIMENTOS = 5
+
+function novoDepoimento() {
+  return {
+    name: 'Novo cliente',
+    location: 'Cidade - UF',
+    quote: 'Escreva aqui o depoimento deste cliente.',
+    image: '',
+  }
+}
+
 function BikeIcon() {
   return (
     <svg
@@ -83,6 +94,35 @@ export function HomePage() {
   const depoimentos = content.depoimentos
   const [slide, setSlide] = useState(0)
   const total = Math.max(depoimentos.length, 1)
+
+  useEffect(() => {
+    if (slide >= depoimentos.length) setSlide(0)
+  }, [depoimentos.length, slide])
+
+  function setDepoimentos(next: SiteContent['depoimentos']) {
+    setContent({
+      ...content,
+      depoimentos: next,
+      midias: {
+        ...content.midias,
+        testimonialImages: next.map((d) => d.image),
+      },
+    })
+  }
+
+  function addDepoimento() {
+    if (depoimentos.length >= MAX_DEPOIMENTOS) return
+    const next = [...depoimentos, novoDepoimento()]
+    setDepoimentos(next)
+    setSlide(next.length - 1)
+  }
+
+  function removeDepoimento(idx: number) {
+    if (depoimentos.length <= 1) return
+    const next = depoimentos.filter((_, i) => i !== idx)
+    setDepoimentos(next)
+    setSlide((s) => Math.min(s, next.length - 1))
+  }
 
   const heroSrc = useMemo(() => {
     return resolveMediaUrl(content.midias.heroImageUrl) || HERO_IMAGE
@@ -296,7 +336,7 @@ export function HomePage() {
           <div className="split">
             <div>
               <EditableImage
-                src={resolveMediaUrl(content.midias.usecaseImageUrl)}
+                src={content.midias.usecaseImageUrl}
                 fallback="Foto de cliente real"
                 aspect="4/5"
                 alt="Cliente Libra"
@@ -509,29 +549,18 @@ export function HomePage() {
           <div className="carousel">
             <div className="track" style={{ transform: `translateX(-${slide * 100}%)` }}>
               {depoimentos.map((t, idx) => (
-                <div className="slide" key={`${t.name}-${idx}`}>
+                <div className="slide" key={`depoimento-${idx}`}>
                   <div className="tgrid">
                     <div>
                       <EditableImage
-                        src={resolveMediaUrl(t.image)}
+                        src={t.image}
                         fallback="Foto de cliente real"
                         aspect="1/1.1"
                         alt={t.name}
                         onChange={(url) => {
-                          const next = depoimentos.map((d, i) =>
-                            i === idx ? { ...d, image: url } : d,
+                          setDepoimentos(
+                            depoimentos.map((d, i) => (i === idx ? { ...d, image: url } : d)),
                           )
-                          const imgs = [...content.midias.testimonialImages] as [
-                            string,
-                            string,
-                            string,
-                          ]
-                          if (idx < 3) imgs[idx] = url
-                          setContent({
-                            ...content,
-                            depoimentos: next,
-                            midias: { ...content.midias, testimonialImages: imgs },
-                          })
                         }}
                       />
                     </div>
@@ -543,10 +572,9 @@ export function HomePage() {
                         multiline
                         value={t.quote}
                         onChange={(v) => {
-                          const next = depoimentos.map((d, i) =>
-                            i === idx ? { ...d, quote: v } : d,
+                          setDepoimentos(
+                            depoimentos.map((d, i) => (i === idx ? { ...d, quote: v } : d)),
                           )
-                          setContent({ ...content, depoimentos: next })
                         }}
                       />
                       <div className="who">
@@ -554,20 +582,18 @@ export function HomePage() {
                           as="b"
                           value={t.name}
                           onChange={(v) => {
-                            const next = depoimentos.map((d, i) =>
-                              i === idx ? { ...d, name: v } : d,
+                            setDepoimentos(
+                              depoimentos.map((d, i) => (i === idx ? { ...d, name: v } : d)),
                             )
-                            setContent({ ...content, depoimentos: next })
                           }}
                         />
                         <EditableText
                           as="span"
                           value={t.location}
                           onChange={(v) => {
-                            const next = depoimentos.map((d, i) =>
-                              i === idx ? { ...d, location: v } : d,
+                            setDepoimentos(
+                              depoimentos.map((d, i) => (i === idx ? { ...d, location: v } : d)),
                             )
-                            setContent({ ...content, depoimentos: next })
                           }}
                         />
                       </div>
@@ -596,6 +622,29 @@ export function HomePage() {
               ›
             </button>
           </div>
+          {editing ? (
+            <div className="depo-edit">
+              <button
+                type="button"
+                className="btn btn-blue btn-sm"
+                onClick={addDepoimento}
+                disabled={depoimentos.length >= MAX_DEPOIMENTOS}
+              >
+                Adicionar cliente
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost-d btn-sm"
+                onClick={() => removeDepoimento(slide)}
+                disabled={depoimentos.length <= 1}
+              >
+                Remover este cliente
+              </button>
+              <span className="count">
+                {depoimentos.length} de {MAX_DEPOIMENTOS}
+              </span>
+            </div>
+          ) : null}
         </Wrap>
       </Section>
 
@@ -683,7 +732,7 @@ export function HomePage() {
           </div>
           <div className="about-photo">
             <EditableImage
-              src={resolveMediaUrl(content.midias.aboutImageUrl)}
+              src={content.midias.aboutImageUrl}
               fallback="Foto do time Libra"
               aspect="5/4"
               alt="Time Libra"

@@ -88,6 +88,7 @@ export function resolveMediaUrl(url: string | undefined | null): string {
 
   const base = getApiBase()
   if (!base) return path
+  if (path === base || path.startsWith(`${base}/`)) return path
   return `${base}${path}`
 }
 

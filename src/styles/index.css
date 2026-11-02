@@ -946,7 +946,8 @@ img {
   display: block;
 }
 
-.quote blockquote {
+.quote blockquote,
+.quote .serif {
   font-family: var(--font-serif);
   font-size: clamp(25px, 3.4vw, 40px);
   font-weight: 400;
@@ -1227,6 +1228,20 @@ img {
   background: var(--gold);
   width: 28px;
   border-radius: 5px;
+}
+
+.depo-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.depo-edit .count {
+  font-size: 13px;
+  color: var(--muted);
 }
 
 /* page hero */
@@ -2843,6 +2858,11 @@ h3,
 
   .sec-head h2 {
     font-size: clamp(27px, 8vw, 36px);
+  }
+
+  .quote blockquote,
+  .quote .serif {
+    font-size: clamp(21px, 6.4vw, 28px);
   }
 
   .steps {

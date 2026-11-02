@@ -379,7 +379,15 @@ export function mergeSiteContent(remote: SiteContent): SiteContent {
       parceiros: { ...PARCEIROS_DEFAULTS, ...remote.paginas?.parceiros },
       blog: { ...defaults.paginas.blog, ...remote.paginas?.blog },
     },
-    depoimentos:
-      remote.depoimentos?.length > 0 ? remote.depoimentos : defaults.depoimentos,
+    depoimentos: (
+      remote.depoimentos?.length > 0 ? remote.depoimentos : defaults.depoimentos
+    )
+      .slice(0, 5)
+      .map((d) => ({
+        name: d.name || '',
+        location: d.location || '',
+        quote: d.quote || '',
+        image: d.image || '',
+      })),
   }
 }

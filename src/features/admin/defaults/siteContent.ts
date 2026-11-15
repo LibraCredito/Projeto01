@@ -135,7 +135,7 @@ export const HOME_DEFAULTS: Record<string, string> = {
   footLinkPorQue: 'Por que faz sentido',
   footLinkLibra: 'A Libra',
   footLinkBlog: 'Blog',
-  footLinkParceiros: 'Trabalhe com a gente',
+  footLinkParceiros: 'Seja parceiro',
   footLinkHistorias: 'Histórias de clientes',
   footWhatsapp: 'WhatsApp',
   footEmail: 'contato@libracredito.com.br',
@@ -348,6 +348,12 @@ export function createDefaultSiteContent(): SiteContent {
       quote: t.quote,
       image: t.image,
     })),
+    shorts: [
+      'https://www.youtube.com/shorts/ElswNb_99hc',
+      'https://www.youtube.com/shorts/5rCMJAglYw8',
+      'https://www.youtube.com/shorts/6_cqYsC3_sw',
+      'https://www.youtube.com/shorts/tUuY8Ojws_8',
+    ],
   }
 }
 
@@ -389,5 +395,9 @@ export function mergeSiteContent(remote: SiteContent): SiteContent {
         quote: d.quote || '',
         image: d.image || '',
       })),
+    shorts: (Array.isArray(remote.shorts) ? remote.shorts : defaults.shorts)
+      .map((url) => String(url || '').trim())
+      .filter(Boolean)
+      .slice(0, 10),
   }
 }

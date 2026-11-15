@@ -10,6 +10,7 @@ export type ParceiroInput = {
   email: string
   telefone: string
   cidade: string
+  cnpj?: string
   ramoId: number
 }
 

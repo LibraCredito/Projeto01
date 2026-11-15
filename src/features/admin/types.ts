@@ -72,6 +72,8 @@ export type SiteContent = {
     blog: Record<string, string>
   }
   depoimentos: Array<{ name: string; location: string; quote: string; image: string }>
+  /** Links do YouTube dos shorts do blog. No máximo 10. */
+  shorts: string[]
 }
 
 export type AdminSession = {

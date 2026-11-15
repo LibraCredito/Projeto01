@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { ShortsCarousel } from '@/components/ShortsCarousel'
 import { Section } from '@/components/ui/Section'
 import { Wrap } from '@/components/ui/Wrap'
 import { BLOG_CATEGORIES } from '@/content/blog'
@@ -36,7 +37,7 @@ export function BlogPage() {
   }, [published, filter])
 
   return (
-    <main>
+    <main className="blog-page">
       <section className="phero">
         <Wrap>
           <Eyebrow light>
@@ -50,6 +51,12 @@ export function BlogPage() {
           <F k="lead" as="p" multiline />
         </Wrap>
       </section>
+
+      <Section id="shorts" variant="cream2">
+        <Wrap>
+          <ShortsCarousel />
+        </Wrap>
+      </Section>
 
       <Section variant="cream">
         <Wrap>

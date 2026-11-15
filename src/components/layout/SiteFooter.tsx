@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import type { MouseEvent } from 'react'
 
 import { HOME_DEFAULTS } from '@/features/admin/defaults/siteContent'
@@ -48,6 +48,12 @@ function FootText({
 
 export function SiteFooter() {
   const { content, editing } = useAdmin()
+  const { pathname } = useLocation()
+  const onHome = pathname === '/'
+  const current = (path: string) => {
+    if (path === ROUTES.BLOG) return pathname === ROUTES.BLOG || pathname.startsWith('/blog/')
+    return pathname === path
+  }
   const home = content.paginas.home
   const whatsappHref = content.cta.whatsapp || '#'
 
@@ -70,16 +76,28 @@ export function SiteFooter() {
             <h4>
               <FootText k="footColProduto" />
             </h4>
-            <Link to={ROUTES.HOME} onClick={linkClick}>
+            <Link className={onHome ? 'active' : undefined} to={ROUTES.HOME} onClick={linkClick}>
               <FootText k="footLinkHome" />
             </Link>
-            <Link to={ROUTES.SIMULACAO} onClick={linkClick}>
+            <Link
+              className={current(ROUTES.SIMULACAO) ? 'active' : undefined}
+              to={ROUTES.SIMULACAO}
+              onClick={linkClick}
+            >
               <FootText k="footLinkSimular" />
             </Link>
-            <Link to={ROUTES.COMO_FUNCIONA} onClick={linkClick}>
+            <Link
+              className={current(ROUTES.COMO_FUNCIONA) ? 'active' : undefined}
+              to={ROUTES.COMO_FUNCIONA}
+              onClick={linkClick}
+            >
               <FootText k="footLinkComo" />
             </Link>
-            <Link to={ROUTES.POR_QUE_FAZ_SENTIDO} onClick={linkClick}>
+            <Link
+              className={current(ROUTES.POR_QUE_FAZ_SENTIDO) ? 'active' : undefined}
+              to={ROUTES.POR_QUE_FAZ_SENTIDO}
+              onClick={linkClick}
+            >
               <FootText k="footLinkPorQue" />
             </Link>
           </div>
@@ -88,16 +106,32 @@ export function SiteFooter() {
             <h4>
               <FootText k="footColEmpresa" />
             </h4>
-            <Link to={ROUTES.A_LIBRA} onClick={linkClick}>
+            <Link
+              className={current(ROUTES.A_LIBRA) ? 'active' : undefined}
+              to={ROUTES.A_LIBRA}
+              onClick={linkClick}
+            >
               <FootText k="footLinkLibra" />
             </Link>
-            <Link to={ROUTES.BLOG} onClick={linkClick}>
+            <Link
+              className={current(ROUTES.BLOG) ? 'active' : undefined}
+              to={ROUTES.BLOG}
+              onClick={linkClick}
+            >
               <FootText k="footLinkBlog" />
             </Link>
-            <Link to={ROUTES.PARCEIROS} onClick={linkClick}>
-              <FootText k="footLinkParceiros" />
+            <Link
+              className={current(ROUTES.PARCEIROS) ? 'active' : undefined}
+              to={ROUTES.PARCEIROS}
+              onClick={linkClick}
+            >
+              Seja parceiro
             </Link>
-            <Link to={`${ROUTES.HOME}#depoimento`} onClick={linkClick}>
+            <Link
+              className={onHome ? 'active' : undefined}
+              to={`${ROUTES.HOME}#depoimento`}
+              onClick={linkClick}
+            >
               <FootText k="footLinkHistorias" />
             </Link>
           </div>
@@ -128,10 +162,6 @@ export function SiteFooter() {
             <p className="legal-links">
               <Link to={ROUTES.POLITICA_PRIVACIDADE} onClick={linkClick}>
                 Política de Privacidade
-              </Link>
-              {' · '}
-              <Link to={ROUTES.POLITICA_COOKIES} onClick={linkClick}>
-                Política de Cookies
               </Link>
             </p>
           </div>

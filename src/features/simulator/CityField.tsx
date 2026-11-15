@@ -5,9 +5,18 @@ import { buscarCidades, formatarCidade, type Municipio } from '@/features/simula
 type CityFieldProps = {
   value: string
   onChange: (value: string) => void
+  id?: string
+  className?: string
+  listId?: string
 }
 
-export function CityField({ value, onChange }: CityFieldProps) {
+export function CityField({
+  value,
+  onChange,
+  id,
+  className,
+  listId = 'cidade-opcoes',
+}: CityFieldProps) {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const opcoes = useMemo(() => (open ? buscarCidades(value) : []), [open, value])
@@ -20,13 +29,15 @@ export function CityField({ value, onChange }: CityFieldProps) {
   return (
     <div className="city-field">
       <input
+        id={id}
+        className={className}
         value={value}
         placeholder="Digite a cidade"
         autoComplete="off"
         role="combobox"
         aria-expanded={open && opcoes.length > 0}
         aria-autocomplete="list"
-        aria-controls="cidade-opcoes"
+        aria-controls={listId}
         onChange={(e) => {
           onChange(e.target.value)
           setActive(0)
@@ -56,7 +67,7 @@ export function CityField({ value, onChange }: CityFieldProps) {
         }}
       />
       {open && opcoes.length > 0 ? (
-        <ul className="city-list" id="cidade-opcoes" role="listbox">
+        <ul className="city-list" id={listId} role="listbox">
           {opcoes.map((cidade, i) => {
             const rotulo = formatarCidade(cidade.nome, cidade.uf)
             return (

@@ -14,7 +14,19 @@ import {
   type ParceiroRecente,
   type RamoParceiro,
 } from '@/features/parceiros/api'
+import { CityField } from '@/features/simulator/CityField'
 import { cn } from '@/lib/utils'
+
+function maskCnpj(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 14)
+  if (digits.length <= 2) return digits
+  if (digits.length <= 5) return `${digits.slice(0, 2)}.${digits.slice(2)}`
+  if (digits.length <= 8) return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`
+  if (digits.length <= 12) {
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8)}`
+  }
+  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`
+}
 
 function maskPhone(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 11)
@@ -47,6 +59,7 @@ export function ParceirosPage() {
   const [tel, setTel] = useState('')
   const [ramoId, setRamoId] = useState('')
   const [cidade, setCidade] = useState('')
+  const [cnpj, setCnpj] = useState('')
   const [ramos, setRamos] = useState<RamoParceiro[]>([])
   const [ramosStatus, setRamosStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [ramosTick, setRamosTick] = useState(0)
@@ -119,6 +132,7 @@ export function ParceirosPage() {
         email: email.trim(),
         telefone: tel,
         cidade: cidade.trim(),
+        cnpj: cnpj.trim() || undefined,
         ramoId: Number(ramoId),
       })
 
@@ -134,6 +148,7 @@ export function ParceirosPage() {
       setEmail('')
       setTel('')
       setCidade('')
+      setCnpj('')
       setRamoId('')
       setErrors(EMPTY_ERRORS)
     } catch (err) {
@@ -315,14 +330,24 @@ export function ParceirosPage() {
                 </button>
               ) : null}
             </div>
-            <div className="pfield full">
-              <label htmlFor="p-cidade">Cidade / UF</label>
+            <div className="pfield">
+              <label htmlFor="p-cnpj">CNPJ (opcional)</label>
               <input
+                id="p-cnpj"
+                inputMode="numeric"
+                value={cnpj}
+                onChange={(e) => setCnpj(maskCnpj(e.target.value))}
+                placeholder="00.000.000/0000-00"
+              />
+            </div>
+            <div className="pfield">
+              <label htmlFor="p-cidade">Cidade / UF</label>
+              <CityField
                 id="p-cidade"
+                listId="parceiro-cidades"
                 className={cn(errors.cidade && 'err')}
                 value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-                placeholder="Sua cidade"
+                onChange={setCidade}
               />
             </div>
             {showMsg ? <F k="formError" as="p" className="pform-msg" /> : null}

@@ -6,7 +6,7 @@ import { NAV_DEFAULTS } from '@/features/admin/defaults/siteContent'
 import { useAdmin } from '@/features/admin/AdminProvider'
 import { EditableText } from '@/features/admin/components/EditableText'
 import type { NavLabels } from '@/features/admin/types'
-import { ROUTES } from '@/lib/constants/routes'
+import { AREA_CLIENTE_URL, ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
 const NAV_KEYS: Array<{ to: string; end?: boolean; key: keyof NavLabels }> = [
@@ -65,7 +65,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         <Button to={ROUTES.SIMULACAO} variant="gold" arrow onClick={onClose}>
           Simular meu crédito
         </Button>
-        <Button href="#" variant="ghost-l" onClick={onClose}>
+        <Button href={AREA_CLIENTE_URL} target="_blank" rel="noopener noreferrer" variant="ghost-l" onClick={onClose}>
           Área do cliente
         </Button>
       </div>

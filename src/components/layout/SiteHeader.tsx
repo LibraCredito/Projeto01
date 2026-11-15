@@ -7,7 +7,7 @@ import { NAV_DEFAULTS } from '@/features/admin/defaults/siteContent'
 import { useAdmin } from '@/features/admin/AdminProvider'
 import { EditableText } from '@/features/admin/components/EditableText'
 import type { NavLabels } from '@/features/admin/types'
-import { ROUTES } from '@/lib/constants/routes'
+import { AREA_CLIENTE_URL, ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
 const NAV_KEYS: Array<{ to: string; end?: boolean; key: keyof NavLabels }> = [
@@ -104,7 +104,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="navr">
-            <a className="login" href="#">
+            <a className="login" href={AREA_CLIENTE_URL} target="_blank" rel="noopener noreferrer">
               Área do cliente
             </a>
             <Button to={ROUTES.SIMULACAO} variant="blue" size="sm" arrow>

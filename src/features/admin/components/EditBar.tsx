@@ -6,23 +6,11 @@ import type { SiteContent } from '@/features/admin/types'
 import { ytId } from '@/features/admin/utils/ytId'
 import { ROUTES } from '@/lib/constants/routes'
 
-function applyVideo(
-  prev: SiteContent,
-  slot: 'home' | 'depoimento',
-  url: string,
-): SiteContent {
+function applyVideo(prev: SiteContent, url: string): SiteContent {
   return {
     ...prev,
-    videos: {
-      ...prev.videos,
-      ...(slot === 'home'
-        ? { homeYoutubeOrUrl: url }
-        : { depoimentoYoutubeOrUrl: url }),
-    },
-    midias: {
-      ...prev.midias,
-      ...(slot === 'home' ? { homeVideoUrl: url } : { depoimentoVideoUrl: url }),
-    },
+    videos: { ...prev.videos, depoimentoYoutubeOrUrl: url },
+    midias: { ...prev.midias, depoimentoVideoUrl: url },
   }
 }
 
@@ -44,24 +32,7 @@ export function EditBar() {
   if (pathname.startsWith(ROUTES.ADMIN)) return null
 
   function onVideo() {
-    const isHome = pathname === ROUTES.HOME
-    let slot: 'home' | 'depoimento' = 'depoimento'
-
-    if (isHome) {
-      const which = window.prompt(
-        'Qual vídeo?\n\n1 — Assista (A Libra em movimento)\n2 — Depoimento (histórias)\n\nDigite 1 ou 2:',
-        '1',
-      )
-      if (which === null) return
-      slot = which.trim() === '2' ? 'depoimento' : 'home'
-    }
-
-    const next = window.prompt(
-      slot === 'home'
-        ? 'Cole a URL do YouTube do vídeo Assista:'
-        : 'Cole a URL do YouTube do depoimento:',
-      '',
-    )
+    const next = window.prompt('Cole a URL do YouTube do depoimento:', '')
     if (next === null) return
     const url = next.trim()
     if (!url) return
@@ -72,7 +43,7 @@ export function EditBar() {
       })
       return
     }
-    setContent((prev) => applyVideo(prev, slot, url))
+    setContent((prev) => applyVideo(prev, url))
     setFlash({ type: 'ok', text: 'URL do YouTube atualizada. Clique em Salvar.' })
   }
 

@@ -8,6 +8,14 @@ export type SimulacaoInput = {
   prazo: number
   imovel: number
   cidade: string
+  /** Escala de urgência: 1 pesquisando, 2 próximos meses, 3 próximas semanas, 4 para ontem. */
+  escala?: 1 | 2 | 3 | 4
+  endereco?: string
+  logradouro?: string
+  numero?: string
+  cep?: string
+  bairro?: string
+  complemento?: string
   parcela?: number
   amort?: 'price' | 'sac'
   urgencia?: string

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { BrazilMap } from '@/components/BrazilMap'
+import { RateCompare } from '@/components/RateCompare'
+import { SocialGrid } from '@/components/SocialGrid'
 import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
@@ -17,6 +19,13 @@ import { ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
 const MAX_DEPOIMENTOS = 5
+
+function iniciais(nome: string) {
+  const partes = nome.trim().split(/\s+/).filter(Boolean)
+  if (partes.length === 0) return '•'
+  if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase()
+  return `${partes[0][0]}${partes[partes.length - 1][0]}`.toUpperCase()
+}
 
 function novoDepoimento() {
   return {
@@ -160,8 +169,6 @@ export function HomePage() {
     setHeroMedia((prev) => (prev === 'fallback' ? prev : 'video'))
   }
 
-  const homeVideoUrl =
-    content.videos.homeYoutubeOrUrl || content.midias.homeVideoUrl || ''
   const depoimentoVideoUrl =
     content.videos.depoimentoYoutubeOrUrl || content.midias.depoimentoVideoUrl || ''
 
@@ -304,33 +311,6 @@ export function HomePage() {
         ) : null}
       </section>
 
-      {(editing || Boolean(homeVideoUrl)) && (
-        <Section variant="cream2" className="vsec">
-          <Wrap>
-            <div className="sec-head vsec-head">
-              <Eyebrow>
-                <H k="videoEyebrow" />
-              </Eyebrow>
-              <h2 className="serif">
-                <H k="videoTitleBefore" /> <H k="videoTitleEm" className="em" />.
-              </h2>
-            </div>
-            <VideoSlot
-              url={homeVideoUrl}
-              label="Adicionar vídeo da Libra"
-              hint="Vídeo institucional (Assista). Clique e cole a URL do YouTube. Não é o depoimento de baixo."
-              onChange={(url) =>
-                setContent((prev) => ({
-                  ...prev,
-                  videos: { ...prev.videos, homeYoutubeOrUrl: url },
-                  midias: { ...prev.midias, homeVideoUrl: url },
-                }))
-              }
-            />
-          </Wrap>
-        </Section>
-      )}
-
       <Section id="usecases" variant="cream">
         <Wrap>
           <div className="split">
@@ -432,48 +412,7 @@ export function HomePage() {
               <H k="whyTitle" />
             </h2>
           </div>
-          <div className="cmp-grid">
-            <div className="cmp cmp-bad">
-              <small>
-                <H k="whyBadLabel" />
-              </small>
-              <div className="big">
-                <H k="whyBadValue" />
-              </div>
-              <div className="u">
-                <H k="whyBadUnit" multiline />
-              </div>
-            </div>
-            <div className="cmp cmp-good">
-              <small>
-                <H k="whyGoodLabel" />
-              </small>
-              <div className="big">
-                <H k="whyGoodValue" />
-              </div>
-              <div className="u">
-                <H k="whyGoodUnit" multiline />
-              </div>
-              <div className="cmp-meta">
-                <div>
-                  <div className="mk">
-                    <H k="whyMeta1Value" />
-                  </div>
-                  <div className="ml">
-                    <H k="whyMeta1Label" />
-                  </div>
-                </div>
-                <div>
-                  <div className="mk">
-                    <H k="whyMeta2Value" />
-                  </div>
-                  <div className="ml">
-                    <H k="whyMeta2Label" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <RateCompare />
           <H k="whyNote" as="p" className="cmp-note" multiline />
         </Wrap>
       </Section>
@@ -538,11 +477,6 @@ export function HomePage() {
                   <H k="depoChip2" />
                 </span>
               </div>
-              {editing ? (
-                <p style={{ marginTop: 14, fontSize: 13.5, color: 'var(--muted)' }}>
-                  Este quadro é só o depoimento. O vídeo <b>Assista</b> fica na seção de cima.
-                </p>
-              ) : null}
             </div>
           </div>
 
@@ -550,20 +484,7 @@ export function HomePage() {
             <div className="track" style={{ transform: `translateX(-${slide * 100}%)` }}>
               {depoimentos.map((t, idx) => (
                 <div className="slide" key={`depoimento-${idx}`}>
-                  <div className="tgrid">
-                    <div>
-                      <EditableImage
-                        src={t.image}
-                        fallback="Foto de cliente real"
-                        aspect="1/1.1"
-                        alt={t.name}
-                        onChange={(url) => {
-                          setDepoimentos(
-                            depoimentos.map((d, i) => (i === idx ? { ...d, image: url } : d)),
-                          )
-                        }}
-                      />
-                    </div>
+                  <div className="tquote">
                     <div className="quote">
                       <span className="mark">&ldquo;</span>
                       <EditableText
@@ -578,24 +499,31 @@ export function HomePage() {
                         }}
                       />
                       <div className="who">
-                        <EditableText
-                          as="b"
-                          value={t.name}
-                          onChange={(v) => {
-                            setDepoimentos(
-                              depoimentos.map((d, i) => (i === idx ? { ...d, name: v } : d)),
-                            )
-                          }}
-                        />
-                        <EditableText
-                          as="span"
-                          value={t.location}
-                          onChange={(v) => {
-                            setDepoimentos(
-                              depoimentos.map((d, i) => (i === idx ? { ...d, location: v } : d)),
-                            )
-                          }}
-                        />
+                        <span className="wava" aria-hidden>
+                          {iniciais(t.name)}
+                        </span>
+                        <div className="wtxt">
+                          <EditableText
+                            as="b"
+                            value={t.name}
+                            onChange={(v) => {
+                              setDepoimentos(
+                                depoimentos.map((d, i) => (i === idx ? { ...d, name: v } : d)),
+                              )
+                            }}
+                          />
+                          <EditableText
+                            as="span"
+                            value={t.location}
+                            onChange={(v) => {
+                              setDepoimentos(
+                                depoimentos.map((d, i) =>
+                                  i === idx ? { ...d, location: v } : d,
+                                ),
+                              )
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -744,6 +672,22 @@ export function HomePage() {
               }
             />
           </div>
+        </Wrap>
+      </Section>
+
+      <Section id="redes" variant="cream">
+        <Wrap>
+          <div className="sec-head" style={{ marginBottom: 44 }}>
+            <Eyebrow>Nossas redes</Eyebrow>
+            <h2 className="serif">
+              Acompanhe a Libra <span className="em">de pertinho</span>.
+            </h2>
+            <p>
+              Conteúdo sobre crédito, imóvel e vida financeira — do jeito leve que você já viu por
+              aqui.
+            </p>
+          </div>
+          <SocialGrid />
         </Wrap>
       </Section>
 

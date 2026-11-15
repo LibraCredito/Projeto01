@@ -1,3 +1,4 @@
+import { RateCompare } from '@/components/RateCompare'
 import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
@@ -32,32 +33,7 @@ export function PorQueFazSentidoPage() {
             </Eyebrow>
             <F k="cmpTitle" as="h2" className="serif" />
           </div>
-          <div className="cmp-grid">
-            <div className="cmp cmp-bad">
-              <small>
-                <F k="badLabel" />
-              </small>
-              <F k="badValue" as="div" className="big" />
-              <F k="badUnit" as="div" className="u" />
-            </div>
-            <div className="cmp cmp-good">
-              <small>
-                <F k="goodLabel" />
-              </small>
-              <F k="goodValue" as="div" className="big" />
-              <F k="goodUnit" as="div" className="u" />
-              <div className="cmp-meta">
-                <div>
-                  <F k="meta1Value" as="div" className="mk" />
-                  <F k="meta1Label" as="div" className="ml" />
-                </div>
-                <div>
-                  <F k="meta2Value" as="div" className="mk" />
-                  <F k="meta2Label" as="div" className="ml" />
-                </div>
-              </div>
-            </div>
-          </div>
+          <RateCompare />
         </Wrap>
       </Section>
 

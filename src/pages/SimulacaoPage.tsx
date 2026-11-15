@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/Button'
 import { CityField } from '@/features/simulator/CityField'
 import { Wrap } from '@/components/ui/Wrap'
 import { enviarSimulacao, SimulacaoFormError, textoEspera, textoMotivo, type SimulacaoRecente } from '@/features/simulator/api'
+import { simular, type ResultadoSimulacao } from '@/features/simulator/simular'
 import { cn } from '@/lib/utils'
 
 const MIN_IMOVEL = 200_000
 const MIN_CRED = 100_000
 const LTV = 0.5
-const TAXA = 0.0119
+const JUROS_PERCENTUAL = 1.19
 
 type Urgency = 'imediata' | 'semanas' | 'meses' | 'pesquisando' | null
 type Amort = 'price' | 'sac'
@@ -50,23 +51,10 @@ function maskCep(value: string) {
   return `${d.slice(0, 5)}-${d.slice(5)}`
 }
 
-/** Price formula: PMT = (C * i) / (1 - (1+i)^-n) + 40 */
-function priceParcela(credito: number, n: number) {
-  if (credito <= 0 || n <= 0) return 0
-  const i = TAXA
-  const pmt = (credito * i) / (1 - Math.pow(1 + i, -n))
-  return pmt + 40
-}
-
-function sacParcelas(credito: number, n: number) {
-  if (credito <= 0 || n <= 0) return { first: 0, mid: 0, last: 0 }
-  const amort = credito / n
-  const first = amort + credito * TAXA + 40
-  const midMonth = Math.floor(n / 2)
-  const midBalance = credito - amort * midMonth
-  const mid = amort + midBalance * TAXA + 40
-  const last = amort + amort * TAXA + 40
-  return { first, mid, last }
+function dataLocalISO() {
+  const hoje = new Date()
+  const z = (n: number) => String(n).padStart(2, '0')
+  return `${hoje.getFullYear()}-${z(hoje.getMonth() + 1)}-${z(hoje.getDate())}`
 }
 
 function BikeBadge() {
@@ -91,11 +79,11 @@ function BikeBadge() {
   )
 }
 
-const URGENCY_OPTS: { id: NonNullable<Urgency>; label: string; hint: string }[] = [
-  { id: 'imediata', label: 'Para ontem', hint: 'É urgente, quanto antes melhor' },
-  { id: 'semanas', label: 'Nas próximas semanas', hint: 'Tenho um plano em andamento' },
-  { id: 'meses', label: 'Nos próximos meses', hint: 'Estou me organizando com calma' },
-  { id: 'pesquisando', label: 'Ainda estou só pesquisando', hint: 'Quero entender se faz sentido' },
+const URGENCY_OPTS: { id: NonNullable<Urgency>; label: string; hint: string; escala: 1 | 2 | 3 | 4 }[] = [
+  { id: 'imediata', label: 'Para ontem', hint: 'É urgente, quanto antes melhor', escala: 4 },
+  { id: 'semanas', label: 'Nas próximas semanas', hint: 'Tenho um plano em andamento', escala: 3 },
+  { id: 'meses', label: 'Nos próximos meses', hint: 'Estou me organizando com calma', escala: 2 },
+  { id: 'pesquisando', label: 'Ainda estou só pesquisando', hint: 'Quero entender se faz sentido', escala: 1 },
 ]
 
 export function SimulacaoPage() {
@@ -115,6 +103,7 @@ export function SimulacaoPage() {
 
   const [amountStr, setAmountStr] = useState('')
   const [prazo, setPrazo] = useState(120)
+  const [carencia, setCarencia] = useState(0)
   const [amort, setAmort] = useState<Amort>('price')
 
   const [nome, setNome] = useState('')
@@ -138,17 +127,24 @@ export function SimulacaoPage() {
   const saldoBloqueia =
     financiado === 'sim' && imovel >= MIN_IMOVEL && saldo > 0 && saldo > liquido * 0.6 + 0.01
 
-  const estimate = useMemo(() => {
-    const cred = creditoFinal
-    if (cred < MIN_CRED || belowMinImovel || saldoBloqueia) {
-      return { parcela: 0, renda: 0, sac: { first: 0, mid: 0, last: 0 }, custas: 0 }
-    }
-    const parcela = priceParcela(cred, prazo)
-    const sac = sacParcelas(cred, prazo)
-    const renda = parcela / 0.3
-    const custas = cred * 0.03
-    return { parcela, renda, sac, custas }
-  }, [creditoFinal, prazo, belowMinImovel, saldoBloqueia])
+  const estimate = useMemo<ResultadoSimulacao | null>(() => {
+    if (creditoFinal < MIN_CRED || belowMinImovel || saldoBloqueia) return null
+    return simular({
+      vlrImovel: imovel,
+      valorSolicitado: creditoFinal,
+      jurosPercentual: JUROS_PERCENTUAL,
+      numeroParcelas: prazo,
+      carencia,
+      amortizacao: amort === 'price' ? 'PRICE' : 'SAC',
+      dataContrato: dataLocalISO(),
+    })
+  }, [imovel, creditoFinal, prazo, carencia, amort, belowMinImovel, saldoBloqueia])
+
+  const parcelaMeio = useMemo(() => {
+    if (!estimate) return 0
+    const cobradas = estimate.linhas.filter((linha) => linha.parcelaFinal > 0)
+    return cobradas[Math.floor(cobradas.length / 2)]?.parcelaFinal ?? 0
+  }, [estimate])
 
   useEffect(() => {
     const digits = onlyDigits(cep)
@@ -208,6 +204,7 @@ export function SimulacaoPage() {
     setSaldoStr('')
     setAmountStr('')
     setPrazo(120)
+    setCarencia(0)
     setAmort('price')
     setNome('')
     setTel('')
@@ -232,8 +229,12 @@ export function SimulacaoPage() {
     }
     if (sendingRef.current) return
 
-    const parcelaBruta = amort === 'price' ? estimate.parcela : estimate.sac.first
-    const urgencia = URGENCY_OPTS.find((o) => o.id === urgency)?.label
+    const parcelaBruta = estimate?.primeiraParcela ?? 0
+    const opcao = URGENCY_OPTS.find((o) => o.id === urgency)
+    const ruaNum = [rua.trim(), numero.trim()].filter(Boolean).join(', ')
+    const endereco = [ruaNum, cep.trim() ? `CEP ${cep.trim()}` : '', bairro.trim(), cidade.trim()]
+      .filter(Boolean)
+      .join(' · ')
     sendingRef.current = true
     setSending(true)
     try {
@@ -245,9 +246,16 @@ export function SimulacaoPage() {
         prazo,
         imovel,
         cidade: cidade.trim(),
+        escala: opcao?.escala,
+        endereco,
+        logradouro: rua.trim() || undefined,
+        numero: numero.trim() || undefined,
+        cep: cep.trim() || undefined,
+        bairro: bairro.trim() || undefined,
+        complemento: complemento.trim() || undefined,
         parcela: parcelaBruta > 0 ? Math.round(parcelaBruta * 100) / 100 : undefined,
         amort,
-        urgencia,
+        urgencia: opcao?.label,
         financiado: financiado === 'sim' ? 'sim' : 'nao',
         origem: window.location.href,
       })
@@ -420,7 +428,7 @@ export function SimulacaoPage() {
                     <div className="fcard">
                       <label>Complemento (opcional)</label>
                       <input
-                        placeholder="Apto, bloco…"
+                        placeholder="Bloco Q"
                         value={complemento}
                         onChange={(e) => setComplemento(e.target.value)}
                       />
@@ -495,6 +503,18 @@ export function SimulacaoPage() {
                         <option value={180}>180 meses</option>
                       </select>
                     </div>
+                    <div className="fcard">
+                      <label>Carência</label>
+                      <select
+                        value={carencia}
+                        onChange={(e) => setCarencia(Number(e.target.value))}
+                      >
+                        <option value={0}>Sem carência</option>
+                        <option value={1}>1 mês</option>
+                        <option value={2}>2 meses</option>
+                        <option value={3}>3 meses</option>
+                      </select>
+                    </div>
                     <div className="fcard full">
                       <label>Valor final do crédito (ajustado ao limite)</label>
                       <input
@@ -530,27 +550,25 @@ export function SimulacaoPage() {
                         <small>SAC</small>
                       </button>
                     </div>
-                    <div className="simr-label">
-                      {amort === 'price' ? 'Parcela a partir de' : '1ª parcela a partir de'}
-                    </div>
+                    <div className="simr-label">1ª parcela a partir de</div>
                     <div className="simr-value">
-                      {estimate.parcela > 0
-                        ? formatMoneyDec(amort === 'price' ? estimate.parcela : estimate.sac.first)
-                        : '—'}
+                      {estimate ? formatMoneyDec(estimate.primeiraParcela) : '—'}
                     </div>
-                    {amort === 'sac' && estimate.sac.first > 0 ? (
+                    {estimate ? (
                       <div className="sac-evo">
                         <div className="sev">
                           <span>1ª parcela</span>
-                          <b>{formatMoneyDec(estimate.sac.first)}</b>
+                          <b>{formatMoneyDec(estimate.primeiraParcela)}</b>
                         </div>
-                        <div className="sev">
-                          <span>na metade</span>
-                          <b>{formatMoneyDec(estimate.sac.mid)}</b>
-                        </div>
+                        {amort === 'sac' ? (
+                          <div className="sev">
+                            <span>na metade</span>
+                            <b>{formatMoneyDec(parcelaMeio)}</b>
+                          </div>
+                        ) : null}
                         <div className="sev gd">
                           <span>última</span>
-                          <b>{formatMoneyDec(estimate.sac.last)}</b>
+                          <b>{formatMoneyDec(estimate.ultimaParcela)}</b>
                         </div>
                       </div>
                     ) : null}
@@ -558,7 +576,7 @@ export function SimulacaoPage() {
                       Renda necessária
                     </div>
                     <div className="simr-value" style={{ fontSize: 30 }}>
-                      {estimate.renda > 0 ? formatMoneyDec(estimate.renda) : '—'}
+                      {estimate ? formatMoneyDec(estimate.primeiraParcela / 0.3) : '—'}
                     </div>
                     <div className="simrows">
                       <div className="simr-row">
@@ -577,14 +595,22 @@ export function SimulacaoPage() {
                       </div>
                       <div className="simr-row">
                         <span>(+) Custas, impostos, seguros e avaliação</span>
-                        <b>{estimate.custas > 0 ? formatMoney(estimate.custas) : '—'}</b>
+                        <b>
+                          {estimate
+                            ? formatMoney(estimate.saldoInicial - creditoFinal)
+                            : '—'}
+                        </b>
                       </div>
                     </div>
                     <div className="simr-note" style={{ marginTop: 14 }}>
                       Parcelas calculadas pelo sistema{' '}
-                      {amort === 'price' ? 'Price (parcelas fixas)' : 'SAC (parcelas decrescentes)'},
-                      com taxa a partir de 1,19% ao mês + IPCA. Estimativa visual — valores finais
-                      sujeitos a análise.
+                      {amort === 'price' ? 'Price' : 'SAC'}, taxa de {JUROS_PERCENTUAL.toLocaleString('pt-BR')}%
+                      ao mês
+                      {carencia > 0 ? ` e carência de ${carencia} ${carencia === 1 ? 'mês' : 'meses'}` : ''}.
+                      {estimate
+                        ? ` CET estimado ${estimate.cetMensal.replace('.', ',')}% a.m. e ${estimate.cetAnual.replace('.', ',')}% a.a.`
+                        : ''}{' '}
+                      Estimativa — valores finais sujeitos a análise.
                     </div>
                   </div>
 

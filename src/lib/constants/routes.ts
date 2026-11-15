@@ -1,3 +1,5 @@
+export const AREA_CLIENTE_URL = 'https://clientes.libracredito.com.br'
+
 export const ROUTES = {
   HOME: '/',
   COMO_FUNCIONA: '/como-funciona',

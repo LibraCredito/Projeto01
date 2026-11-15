@@ -56,7 +56,7 @@ export function BlogArticlePage() {
 
   if (loading) {
     return (
-      <main>
+      <main className="blog-page">
         <PageHero eyebrow="Blog" title="Carregando…" wide>
           Aguarde um instante.
         </PageHero>
@@ -66,7 +66,7 @@ export function BlogArticlePage() {
 
   if (!post || !post.publicado) {
     return (
-      <main>
+      <main className="blog-page">
         <PageHero eyebrow="Blog" title="Artigo não encontrado" wide>
           Esse conteúdo não existe, está oculto ou foi movido.
         </PageHero>
@@ -88,7 +88,7 @@ export function BlogArticlePage() {
   const capa = resolveMediaUrl(post.capaUrl)
 
   return (
-    <main>
+    <main className="blog-page">
       <PageHero eyebrow="Blog" title={post.titulo} wide>
         {post.subtitulo}
       </PageHero>

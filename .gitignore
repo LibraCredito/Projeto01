@@ -14,6 +14,7 @@ node_modules
 !.env.production
 dist
 dist-ssr
+public/v9.html
 *.local
 
 # Editor directories and files

@@ -70,7 +70,23 @@ export function ComoFuncionaPage() {
           </div>
           <div className="pgrid">
             <div className="pcard">
-              <div className="pi">☰</div>
+              <div className="pi" aria-hidden>
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M14 3 H7 a2 2 0 0 0 -2 2 v14 a2 2 0 0 0 2 2 h10 a2 2 0 0 0 2 -2 V8 Z" />
+                  <path d="M14 3 v5 h5" />
+                  <line x1="9" y1="13" x2="15" y2="13" />
+                  <line x1="9" y1="17" x2="13" y2="17" />
+                </svg>
+              </div>
               <F k="doc1Title" as="h3" />
               <F k="doc1Text" as="p" multiline />
             </div>

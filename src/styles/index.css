@@ -1358,8 +1358,15 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shtrack {
+  .shtrack,
+  .sh-th img,
+  .sh-play,
+  .shbtn {
     transition: none;
+  }
+
+  .sh-th:hover img {
+    transform: none;
   }
 }
 
@@ -1383,6 +1390,14 @@ img {
   display: block;
 }
 
+.sh-th img {
+  transition: transform 0.25s ease;
+}
+
+.sh-th:hover img {
+  transform: scale(1.045);
+}
+
 .sh-play {
   position: absolute;
   top: 50%;
@@ -1396,7 +1411,16 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
+  padding-left: 4px;
   border: 1.5px solid rgba(255, 255, 255, 0.55);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.sh-th:hover .sh-play {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
 }
 
 .shnav {
@@ -1414,6 +1438,13 @@ img {
   color: var(--navy);
   font-size: 22px;
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.shbtn:hover {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
 }
 
 .rchart {
@@ -2066,6 +2097,79 @@ img {
 
 .artbody li::marker {
   color: var(--gold);
+}
+
+.artbody a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.artbody strong {
+  font-weight: 700;
+}
+
+.artbody .doc-upd {
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 28px;
+}
+
+.artbody .tablewrap {
+  overflow-x: auto;
+  margin: 6px 0 26px;
+}
+
+.artbody .doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 15.5px;
+}
+
+.artbody .doc-table th {
+  background: var(--navy);
+  color: var(--cream);
+  text-align: left;
+  font-weight: 700;
+  padding: 13px 16px;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+}
+
+.artbody .doc-table td {
+  padding: 13px 16px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.artbody .doc-table tbody tr:nth-child(even) td {
+  background: var(--cream-2, #efe7d5);
+}
+
+.lgpd-note {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin-top: 10px;
+  text-align: left;
+}
+
+.lgpd-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lgpd-note a:hover {
+  color: var(--navy);
 }
 
 .artbody-html h3 {
@@ -3433,6 +3537,24 @@ body.editing [contenteditable="true"]:focus{
   background:rgba(230,168,60,.28);
   box-shadow:0 0 0 3px rgba(230,168,60,.45);
 }
+body.editing .doc-table :is(td, th)[contenteditable="true"]{
+  background:transparent;
+  outline:none;
+  box-shadow:none;
+}
+body.editing .doc-table tbody tr:nth-child(even) td[contenteditable="true"]{
+  background:var(--cream-2, #efe7d5);
+}
+body.editing .doc-table th[contenteditable="true"]{
+  background:var(--navy);
+  color:var(--cream);
+}
+body.editing .doc-table :is(td, th)[contenteditable="true"]:hover,
+body.editing .doc-table :is(td, th)[contenteditable="true"]:focus{
+  outline:2px solid #e6a83c;
+  outline-offset:-2px;
+  box-shadow:none;
+}
 
 /* Botões: moldura dourada sempre visível no modo edição */
 body.editing .btn.is-editing-btn{
@@ -3592,6 +3714,12 @@ body.editing .editable-img-wrap .ph::after{display:none!important}
 .polta:focus{border-color:var(--blue)}
 .polrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .polrow .btn{flex:1;justify-content:center}
+.doc-tools{display:none}
+body.editing .doc-tools{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.doc-tools button{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.doc-tools button:disabled{opacity:.4;cursor:default}
+.doc-tools button.danger{color:#8a3324}
+body.editing .doc-table{outline:1px dashed rgba(230,168,60,.85);outline-offset:4px}
 .doc-reedit{display:none;margin-top:30px;font-size:13px}
 body.editing .doc-reedit{display:block}
 .doc-reedit a{color:var(--blue);font-weight:600;border-bottom:1px dashed var(--line);padding-bottom:1px}

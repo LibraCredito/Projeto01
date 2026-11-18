@@ -4,7 +4,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Wrap } from '@/components/ui/Wrap'
 
 type PageHeroProps = {
-  eyebrow: string
+  eyebrow: ReactNode
   title: ReactNode
   children?: ReactNode
   /** Narrower article-style hero */

@@ -2,6 +2,7 @@ import { useAdmin } from '@/features/admin/AdminProvider'
 import { EditableText } from '@/features/admin/components/EditableText'
 import {
   ALIBRA_DEFAULTS,
+  BLOG_DEFAULTS,
   COMO_DEFAULTS,
   HOME_DEFAULTS,
   PARCEIROS_DEFAULTS,
@@ -17,7 +18,7 @@ const PAGE_DEFAULTS: Record<PageKey, Record<string, string>> = {
   porQue: PORQUE_DEFAULTS,
   aLibra: ALIBRA_DEFAULTS,
   parceiros: PARCEIROS_DEFAULTS,
-  blog: {},
+  blog: BLOG_DEFAULTS,
 }
 
 export function setPageField(

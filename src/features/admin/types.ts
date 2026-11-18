@@ -61,6 +61,9 @@ export type SiteContent = {
   videos: { homeYoutubeOrUrl: string; depoimentoYoutubeOrUrl: string }
   politicas: {
     privacidadeTexto: string
+    privacidadeEyebrow: string
+    privacidadeTitulo: string
+    privacidadeLead: string
     cookiesTexto: string
   }
   paginas: {

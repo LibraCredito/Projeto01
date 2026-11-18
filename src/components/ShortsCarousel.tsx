@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import { useAdmin } from '@/features/admin/AdminProvider'
+import { usePageField } from '@/features/admin/hooks/usePageField'
 import { ytId } from '@/features/admin/utils/ytId'
 
 const MAX_SHORTS = 10
 
 export function ShortsCarousel() {
   const { content, setContent, editing, setFlash } = useAdmin()
+  const { Field: F } = usePageField('blog')
   const shorts = content.shorts ?? []
   const [index, setIndex] = useState(0)
   const [playing, setPlaying] = useState<number | null>(null)
@@ -74,14 +77,13 @@ export function ShortsCarousel() {
     <div className="shgrid">
       <div className="sh-left">
         <div className="sec-head" style={{ marginBottom: 0 }}>
-          <span className="eyebrow">Libra nos Shorts</span>
+          <Eyebrow>
+            <F k="shortsEyebrow" />
+          </Eyebrow>
           <h2 className="serif">
-            Um minuto que vale <span className="em">dinheiro</span>.
+            <F k="shortsTitle" /> <F k="shortsTitleEm" as="span" className="em" />.
           </h2>
-          <p>
-            Respostas rápidas em vídeo para as dúvidas mais comuns sobre crédito com garantia de
-            imóvel. Passa para o lado e maratona.
-          </p>
+          <F k="shortsLead" as="p" multiline />
         </div>
         <div className="shnav">
           <button className="shbtn" type="button" aria-label="Short anterior" onClick={() => go(-1)}>
@@ -152,9 +154,15 @@ export function ShortsCarousel() {
                       }}
                     >
                       <img
-                        src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+                        src={`https://i.ytimg.com/vi/${id}/oar2.jpg`}
                         alt=""
                         loading="lazy"
+                        onError={(event) => {
+                          const img = event.currentTarget
+                          if (img.dataset.fallback === '1') return
+                          img.dataset.fallback = '1'
+                          img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+                        }}
                       />
                       <span className="sh-play" aria-hidden>
                         ▶

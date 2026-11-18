@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type PolicyPasteModalProps = {
   open: boolean
@@ -17,6 +17,10 @@ export function PolicyPasteModal({
 }: PolicyPasteModalProps) {
   const [text, setText] = useState(initial)
 
+  useEffect(() => {
+    if (open) setText(initial)
+  }, [open, initial])
+
   if (!open) return null
 
   return (
@@ -28,7 +32,7 @@ export function PolicyPasteModal({
         </button>
         <h3 className="serif">{title}</h3>
         <p className="hint">
-          Cole o texto puro. Títulos curtos viram seções; linhas com “-” viram listas.
+          Cole o texto puro. Títulos curtos viram seções, linhas com “-” viram listas, linhas com “ | ” viram tabela e **negrito** destaca uma palavra.
         </p>
         <textarea
           className="polta"

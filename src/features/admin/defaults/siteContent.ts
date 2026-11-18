@@ -6,6 +6,7 @@ import {
   TESTIMONIALS,
   USECASE_IMAGE,
 } from '@/content/home'
+import { PRIVACIDADE_TEXTO } from '@/features/admin/defaults/privacidadeTexto'
 import type { SiteContent } from '@/features/admin/types'
 
 /** Textos padrão da Home — todos editáveis no admin. */
@@ -255,6 +256,19 @@ export const ALIBRA_DEFAULTS: Record<string, string> = {
   stat4Label: 'online, com gente de verdade junto',
 }
 
+export const BLOG_DEFAULTS: Record<string, string> = {
+  eyebrow: 'Blog',
+  titleLine1: 'Para decidir',
+  titleLine2: 'com clareza.',
+  lead: 'Guias diretos sobre crédito com garantia de imóvel, dívidas, patrimônio e como fazer o seu dinheiro trabalhar melhor.',
+  emptyMsg: 'Nenhum post publicado ainda. Publique pelo painel Admin → Blog.',
+  shortsEyebrow: 'Libra nos Shorts',
+  shortsTitle: 'Um minuto que vale',
+  shortsTitleEm: 'dinheiro',
+  shortsLead:
+    'Respostas rápidas em vídeo para as dúvidas mais comuns sobre crédito com garantia de imóvel. Passa para o lado e maratona.',
+}
+
 export const PARCEIROS_DEFAULTS: Record<string, string> = {
   eyebrow: 'Para parceiros',
   titleLine1: 'Cresça junto',
@@ -325,7 +339,11 @@ export function createDefaultSiteContent(): SiteContent {
       depoimentoYoutubeOrUrl: '',
     },
     politicas: {
-      privacidadeTexto: '',
+      privacidadeTexto: PRIVACIDADE_TEXTO,
+      privacidadeEyebrow: 'Institucional',
+      privacidadeTitulo: 'Política de Privacidade',
+      privacidadeLead:
+        'Como cuidamos dos seus dados — com a mesma transparência que colocamos no crédito.',
       cookiesTexto: '',
     },
     paginas: {
@@ -334,13 +352,7 @@ export function createDefaultSiteContent(): SiteContent {
       porQue: { ...PORQUE_DEFAULTS },
       aLibra: { ...ALIBRA_DEFAULTS },
       parceiros: { ...PARCEIROS_DEFAULTS },
-      blog: {
-        eyebrow: 'Blog',
-        titleLine1: 'Para decidir',
-        titleLine2: 'com clareza.',
-        lead: 'Guias diretos sobre crédito com garantia de imóvel, dívidas, patrimônio e como fazer o seu dinheiro trabalhar melhor.',
-        emptyMsg: 'Nenhum post publicado ainda. Publique pelo painel Admin → Blog.',
-      },
+      blog: { ...BLOG_DEFAULTS },
     },
     depoimentos: TESTIMONIALS.map((t) => ({
       name: t.name,
@@ -376,7 +388,20 @@ export function mergeSiteContent(remote: SiteContent): SiteContent {
     nav: { ...defaults.nav, ...remote.nav },
     midias,
     videos: { ...defaults.videos, ...remote.videos },
-    politicas: { ...defaults.politicas, ...remote.politicas },
+    politicas: {
+      ...defaults.politicas,
+      ...remote.politicas,
+      privacidadeTexto:
+        (remote.politicas?.privacidadeTexto?.trim().length ?? 0) > 800
+          ? remote.politicas.privacidadeTexto
+          : defaults.politicas.privacidadeTexto,
+      privacidadeEyebrow:
+        remote.politicas?.privacidadeEyebrow?.trim() || defaults.politicas.privacidadeEyebrow,
+      privacidadeTitulo:
+        remote.politicas?.privacidadeTitulo?.trim() || defaults.politicas.privacidadeTitulo,
+      privacidadeLead:
+        remote.politicas?.privacidadeLead?.trim() || defaults.politicas.privacidadeLead,
+    },
     paginas: {
       home: { ...HOME_DEFAULTS, ...remote.paginas?.home },
       comoFunciona: { ...COMO_DEFAULTS, ...remote.paginas?.comoFunciona },

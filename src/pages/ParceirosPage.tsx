@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -15,6 +16,7 @@ import {
   type RamoParceiro,
 } from '@/features/parceiros/api'
 import { CityField } from '@/features/simulator/CityField'
+import { ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
 function maskCnpj(value: string) {
@@ -366,6 +368,10 @@ export function ParceirosPage() {
               >
                 {sending ? 'Enviando…' : <F k="formCta" />}
               </Button>
+              <p className="lgpd-note">
+                Ao enviar, você concorda com a nossa{' '}
+                <Link to={ROUTES.POLITICA_PRIVACIDADE}>Política de Privacidade</Link>.
+              </p>
             </div>
           </form>
         </Wrap>

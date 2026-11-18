@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://projeto01-ecru-pi.vercel.app/sitemap.xml

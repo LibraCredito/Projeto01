@@ -73,9 +73,9 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h4>
+            <h2>
               <FootText k="footColProduto" />
-            </h4>
+            </h2>
             <Link className={onHome ? 'active' : undefined} to={ROUTES.HOME} onClick={linkClick}>
               <FootText k="footLinkHome" />
             </Link>
@@ -103,9 +103,9 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h4>
+            <h2>
               <FootText k="footColEmpresa" />
-            </h4>
+            </h2>
             <Link
               className={current(ROUTES.A_LIBRA) ? 'active' : undefined}
               to={ROUTES.A_LIBRA}
@@ -137,9 +137,9 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h4>
+            <h2>
               <FootText k="footColContato" />
-            </h4>
+            </h2>
             <a href={whatsappHref} onClick={linkClick}>
               <FootText k="footWhatsapp" />
             </a>

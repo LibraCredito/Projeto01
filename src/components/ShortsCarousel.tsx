@@ -154,13 +154,18 @@ export function ShortsCarousel() {
                       }}
                     >
                       <img
-                        src={`https://i.ytimg.com/vi/${id}/oar2.jpg`}
+                        src={`https://i.ytimg.com/vi_webp/${id}/oar2.webp`}
                         alt=""
                         loading="lazy"
                         onError={(event) => {
                           const img = event.currentTarget
-                          if (img.dataset.fallback === '1') return
-                          img.dataset.fallback = '1'
+                          if (img.dataset.fallback === 'jpg') return
+                          if (img.dataset.fallback !== 'webp') {
+                            img.dataset.fallback = 'webp'
+                            img.src = `https://i.ytimg.com/vi/${id}/oar2.jpg`
+                            return
+                          }
+                          img.dataset.fallback = 'jpg'
                           img.src = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
                         }}
                       />

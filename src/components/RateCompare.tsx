@@ -138,7 +138,7 @@ export function RateCompare() {
               onClick={() => setPlaying(true)}
             >
               <img
-                src={`https://i.ytimg.com/vi/${CONTA_VIDEO}/maxresdefault.jpg`}
+                src={`https://i.ytimg.com/vi/${CONTA_VIDEO}/sddefault.jpg`}
                 alt=""
                 loading="lazy"
                 onError={(event) => {

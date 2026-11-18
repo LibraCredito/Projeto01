@@ -49,7 +49,7 @@
   --cream: #f6f1e6;
   --cream-2: #efe7d5;
   --ink: #0b1f3f;
-  --muted: #5a6b84;
+  --muted: #4e5e76;
   --muted-light: rgba(246, 241, 230, 0.72);
   --line: rgba(11, 31, 63, 0.12);
   --line-light: rgba(246, 241, 230, 0.16);
@@ -87,6 +87,11 @@ body {
   font-style: italic;
   color: var(--gold);
   font-weight: 400;
+}
+
+.sec--cream .em,
+.sec--cream2 .em {
+  color: var(--gold-deep);
 }
 
 a {
@@ -940,7 +945,7 @@ img {
 .quote .mark {
   font-family: var(--font-serif);
   font-size: 84px;
-  color: var(--gold);
+  color: var(--gold-deep);
   line-height: 1;
   height: auto;
   display: block;
@@ -1120,18 +1125,21 @@ img {
   margin-bottom: 14px;
 }
 
-.foot-top h4 {
+.foot-top h2 {
   color: var(--cream);
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 16px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .foot-top a {
-  display: block;
-  margin-bottom: 11px;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: 4px;
   transition: color 0.15s;
 }
 
@@ -1149,7 +1157,7 @@ img {
   margin-top: 34px;
   font-size: 12.5px;
   line-height: 1.7;
-  color: rgba(246, 241, 230, 0.5);
+  color: rgba(246, 241, 230, 0.78);
   display: flex;
   justify-content: space-between;
   gap: 24px;
@@ -1182,7 +1190,7 @@ img {
 .legal-note {
   max-width: 36em;
   font-size: 12px;
-  color: rgba(246, 241, 230, 0.42);
+  color: rgba(246, 241, 230, 0.78);
 }
 
 /* carousel */
@@ -1247,22 +1255,37 @@ img {
 }
 
 .cdot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(11, 31, 63, 0.22);
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cdot::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(11, 31, 63, 0.28);
   transition:
     width 0.25s ease,
     background 0.25s ease;
 }
 
 .cdot.active {
-  background: var(--gold);
-  width: 28px;
+  width: 36px;
+}
+
+.cdot.active::before {
+  width: 22px;
   border-radius: 5px;
+  background: var(--gold);
 }
 
 .socgrid {
@@ -1323,7 +1346,7 @@ img {
   position: absolute;
   top: 24px;
   right: 22px;
-  color: var(--gold);
+  color: var(--gold-deep);
   font-size: 18px;
 }
 
@@ -1525,7 +1548,7 @@ img {
 
 .rlibra .rlab,
 .rlibra .rval {
-  color: var(--gold);
+  color: var(--cream);
 }
 
 .rlibra .rlab span {
@@ -3171,7 +3194,7 @@ img {
 }
 
 .vchip .pl {
-  color: var(--gold);
+  color: var(--gold-deep);
   font-size: 11px;
 }
 

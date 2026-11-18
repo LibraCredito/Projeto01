@@ -16,8 +16,26 @@ function tituloSolto(line: string): boolean {
   return line.length <= 70 && line.split(/\s+/).length <= 6 && !/[.,;]$/.test(line)
 }
 
+const TABLE_MARK = '[tabela]'
+
+function readCell(cell: string): string {
+  return cell.replace(/\u200b/g, '').trim()
+}
+
+function writeCell(cell: string): string {
+  const text = cell.trim()
+  return text || '\u200b'
+}
+
 function splitCells(line: string): string[] {
-  return line.split('|').map((cell) => cell.trim())
+  if (!line.includes('|')) return [readCell(line)]
+  return line.split('|').map(readCell)
+}
+
+function padRows(rows: string[][]): string[][] {
+  const width = Math.max(1, ...rows.map((row) => row.length))
+  const body = rows.length ? rows : [['']]
+  return body.map((row) => Array.from({ length: width }, (_, index) => row[index] ?? ''))
 }
 
 function groupsOf(txt: string): string[][] {
@@ -78,13 +96,12 @@ export function parsePolicy(txt: string): PolicyBlock[] {
       out.push({ type: 'update', text: group[0] })
       return
     }
+    if (group[0] === TABLE_MARK && group.length > 1) {
+      out.push({ type: 'table', rows: padRows(group.slice(1).map(splitCells)) })
+      return
+    }
     if (group.length > 1 && group.every((line) => line.includes('|'))) {
-      const rows = group.map(splitCells)
-      const width = Math.max(...rows.map((row) => row.length))
-      out.push({
-        type: 'table',
-        rows: rows.map((row) => Array.from({ length: width }, (_, cell) => row[cell] ?? '')),
-      })
+      out.push({ type: 'table', rows: padRows(group.map(splitCells)) })
       return
     }
     if (group.every((line) => BUL.test(line))) {
@@ -136,14 +153,10 @@ export function serializePolicy(blocks: PolicyBlock[]): string {
       )
       continue
     }
-    const width = Math.max(...block.rows.map((row) => row.length), 0)
-    if (width < 1) continue
-    const rows = block.rows.map((row) =>
-      Array.from({ length: width }, (_, index) => (row[index] ?? '').trim()),
-    )
-    if (rows.length < 2) continue
-    const lines = rows.map((row) => (width === 1 ? `${row[0]} |` : row.join(' | ')))
-    parts.push(lines.join('\n'))
+    const rows = padRows(block.rows.length ? block.rows : [['']])
+    const width = rows[0]?.length ?? 1
+    const lines = rows.map((row) => row.map(writeCell).join(width === 1 ? '' : ' | '))
+    parts.push([TABLE_MARK, ...lines].join('\n'))
   }
   return parts.join('\n\n').trim()
 }

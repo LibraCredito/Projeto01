@@ -369,6 +369,12 @@ export function createDefaultSiteContent(): SiteContent {
   }
 }
 
+function privacidadeVisivel(saved: string | undefined, fallback: string): string {
+  const text = saved?.trim() ?? ''
+  if (text.length > 800 && text.includes('|')) return saved ?? fallback
+  return fallback
+}
+
 /** Garante chaves novas do CMS mesmo quando a API devolve JSON antigo. */
 export function mergeSiteContent(remote: SiteContent): SiteContent {
   const defaults = createDefaultSiteContent()
@@ -391,10 +397,10 @@ export function mergeSiteContent(remote: SiteContent): SiteContent {
     politicas: {
       ...defaults.politicas,
       ...remote.politicas,
-      privacidadeTexto:
-        (remote.politicas?.privacidadeTexto?.trim().length ?? 0) > 800
-          ? remote.politicas.privacidadeTexto
-          : defaults.politicas.privacidadeTexto,
+      privacidadeTexto: privacidadeVisivel(
+        remote.politicas?.privacidadeTexto,
+        defaults.politicas.privacidadeTexto,
+      ),
       privacidadeEyebrow:
         remote.politicas?.privacidadeEyebrow?.trim() || defaults.politicas.privacidadeEyebrow,
       privacidadeTitulo:

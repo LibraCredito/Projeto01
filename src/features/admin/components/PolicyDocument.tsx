@@ -85,8 +85,10 @@ export function PolicyDocument({ text, onChange }: PolicyDocumentProps) {
       const block = next[index]
       if (!block) return current
       const updated = recipe(block)
-      if (!updated) next.splice(index, 1)
-      else next[index] = updated
+      if (!updated) {
+        if (block.type === 'table') return current
+        next.splice(index, 1)
+      } else next[index] = updated
       return serializePolicy(next)
     })
   }
@@ -190,13 +192,13 @@ export function PolicyDocument({ text, onChange }: PolicyDocumentProps) {
                 </button>
                 <button
                   type="button"
-                  disabled={width < 3}
+                  disabled={width < 2}
                   onMouseDown={onToolMouseDown}
                   onClick={() =>
                     changeBlock(index, (current) => {
                       if (current.type !== 'table') return current
                       const span = Math.max(...current.rows.map((row) => row.length), 0)
-                      if (span < 3) return current
+                      if (span < 2) return current
                       const rows = current.rows.map((row) =>
                         Array.from({ length: span }, (_, cell) => row[cell] ?? '').slice(0, -1),
                       )
@@ -224,28 +226,16 @@ export function PolicyDocument({ text, onChange }: PolicyDocumentProps) {
                 </button>
                 <button
                   type="button"
-                  disabled={block.rows.length < 3}
+                  disabled={block.rows.length < 2}
                   onMouseDown={onToolMouseDown}
                   onClick={() =>
                     changeBlock(index, (current) => {
-                      if (current.type !== 'table' || current.rows.length < 3) return current
+                      if (current.type !== 'table' || current.rows.length < 2) return current
                       return { ...current, rows: current.rows.slice(0, -1) }
                     })
                   }
                 >
                   − linha
-                </button>
-                <button
-                  type="button"
-                  className="danger"
-                  onMouseDown={onToolMouseDown}
-                  onClick={() => {
-                    if (window.confirm('Tirar esta tabela da página?')) {
-                      changeBlock(index, (current) => (current.type === 'table' ? null : current))
-                    }
-                  }}
-                >
-                  Tirar tabela
                 </button>
               </div>
             ) : null}

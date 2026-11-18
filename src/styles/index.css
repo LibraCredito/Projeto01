@@ -219,6 +219,8 @@ img {
   left: 0;
   right: 0;
   z-index: 60;
+  background: rgba(11, 31, 63, 0.86);
+  backdrop-filter: blur(10px);
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease,
@@ -1093,7 +1095,7 @@ img {
 }
 
 .final p {
-  color: var(--muted-light);
+  color: rgba(246, 241, 230, 0.92);
   font-size: 19px;
   max-width: 32rem;
   margin: 0 auto 34px;
@@ -1622,7 +1624,7 @@ img {
 
 .rchart-src {
   font-size: 12.5px;
-  color: rgba(246, 241, 230, 0.6);
+  color: rgba(246, 241, 230, 0.92);
   margin: 20px 0 0;
 }
 

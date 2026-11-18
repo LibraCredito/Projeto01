@@ -144,10 +144,12 @@ export function HomePage() {
     return resolveMediaUrl(raw) || HERO_VIDEO
   }, [content.midias.heroVideoUrl])
 
-  /** loading = só navy; video = vídeo pronto; fallback = imagem após erro ou 5s */
+  /** loading = pôster; video = vídeo pronto; fallback = imagem após erro */
   const [heroMedia, setHeroMedia] = useState<'loading' | 'video' | 'fallback'>('loading')
   /** O vídeo só começa a baixar após o load, para não competir com fontes/JS críticos. */
   const [pageLoaded, setPageLoaded] = useState(() => document.readyState === 'complete')
+  /** Pôster fica estável no primeiro carregamento. O vídeo entra no primeiro gesto ou após 12s. */
+  const [allowVideo, setAllowVideo] = useState(false)
 
   useEffect(() => {
     if (pageLoaded) return
@@ -157,13 +159,29 @@ export function HomePage() {
   }, [pageLoaded])
 
   useEffect(() => {
-    if (!pageLoaded) return
+    if (!pageLoaded || allowVideo) return
+    const start = () => setAllowVideo(true)
+    const timer = window.setTimeout(start, 12000)
+    const opts = { once: true, passive: true } as const
+    window.addEventListener('pointerdown', start, opts)
+    window.addEventListener('keydown', start, opts)
+    window.addEventListener('scroll', start, opts)
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('pointerdown', start)
+      window.removeEventListener('keydown', start)
+      window.removeEventListener('scroll', start)
+    }
+  }, [pageLoaded, allowVideo])
+
+  useEffect(() => {
+    if (!allowVideo) return
     setHeroMedia('loading')
     const t = window.setTimeout(() => {
       setHeroMedia((prev) => (prev === 'loading' ? 'fallback' : prev))
     }, 5000)
     return () => window.clearTimeout(t)
-  }, [heroVideoSrc, pageLoaded])
+  }, [heroVideoSrc, allowVideo])
 
   function onHeroVideoReady() {
     setHeroMedia((prev) => (prev === 'fallback' ? prev : 'video'))
@@ -188,7 +206,7 @@ export function HomePage() {
             decoding="async"
           />
         ) : null}
-        {pageLoaded && heroMedia !== 'fallback' ? (
+        {allowVideo && heroMedia !== 'fallback' ? (
           <video
             key={heroVideoSrc}
             className={cn('hero-video', heroMedia === 'video' && 'is-ready')}
